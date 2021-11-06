@@ -10,7 +10,7 @@ CREATE TABLE Users (
     Mobile VARCHAR(30),
     Role VARCHAR(30),
     -- can't bind foreign key here since we still havent't defined the Addresses table
-    addressID INT
+    AddressID INT
 );
 
 -- didn't create the tables for Hosts or Guests since there aren't any extra attributes that need to be stored, unique to either tables, within the scope of this project
