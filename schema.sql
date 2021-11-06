@@ -13,7 +13,7 @@ CREATE TABLE Users (
     addressID INT
 );
 
--- Didn't create the tables for Host or Guest since there aren't any extra attributes that need to be stored, unique to either tables, within the scope of this project
+-- didn't create the tables for Hosts or Guests since there aren't any extra attributes that need to be stored, unique to either tables, within the scope of this project
 
 CREATE TABLE Addresses (
     AddressID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
