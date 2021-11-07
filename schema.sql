@@ -9,7 +9,7 @@ CREATE TABLE Users (
     Email VARCHAR(50),
     Mobile VARCHAR(30),
     Role VARCHAR(30),
-    -- can't bind foreign key here since we still havent't defined the Addresses table
+    -- can't bind foreign key here since the Addresses table isn't defined yet
     AddressID INT
 );
 
@@ -26,4 +26,4 @@ CREATE TABLE Addresses (
 
 -- now we can bind the foreign key
 ALTER TABLE Users
-ADD FOREIGN KEY (UserID) REFERENCES Addresses(AddressID);
+ADD FOREIGN KEY (AddressID) REFERENCES Addresses(AddressID);
