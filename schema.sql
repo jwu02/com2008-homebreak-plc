@@ -21,7 +21,7 @@ CREATE TABLE Addresses (
     Street VARCHAR(50),
     Place VARCHAR(50),
     Postcode VARCHAR(10),
-    PropertyID INT
+    PropertyID INT -- *** need to bind this foreign key later after the Properties table has been created ***
 );
 
 -- now we can bind the foreign key
