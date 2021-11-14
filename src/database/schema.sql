@@ -155,6 +155,6 @@ CREATE TABLE OutdoorFacilities (
     HasOnroadParking TINYINT,
     HasPaidCarPark TINYINT,
     HasPatio TINYINT,
-    HasBarbecue TINYINT
+    HasBarbecue TINYINT,
     FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
 );
