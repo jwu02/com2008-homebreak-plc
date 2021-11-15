@@ -7,10 +7,12 @@ CREATE TABLE Users (
     Forename VARCHAR(30),
     Surname VARCHAR(30),
     Email VARCHAR(50),
+    Password VARCHAR(255),
     Mobile VARCHAR(30),
     Role VARCHAR(30),
     -- can't bind foreign key here since the Addresses table isn't defined yet
-    AddressID INT
+    AddressID INT,
+    UNIQUE (Email)
 );
 
 -- didn't create the tables for Hosts or Guests since there aren't any extra attributes that need to be stored, unique to either tables, within the scope of this project
@@ -21,7 +23,8 @@ CREATE TABLE Addresses (
     Street VARCHAR(50),
     Place VARCHAR(50),
     Postcode VARCHAR(10),
-    PropertyID INT
+    PropertyID INT,
+    CONSTRAINT UC_Addresses UNIQUE (House, Postcode)
 );
 
 -- now we can bind the foreign key
