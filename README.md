@@ -1,7 +1,5 @@
 # Todos
 - improve gui
-- improve validation code, validate all fields
-- return error messages if
-    - required fields not entered (all)
-    - user already registered
-    - incorrect login credentials
+- return error messages to UI if
+    - wrong credentials entered at login
+    - user with email supplied already exists

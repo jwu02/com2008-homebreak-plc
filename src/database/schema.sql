@@ -4,27 +4,24 @@
 
 CREATE TABLE Users (
     UserID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    Forename VARCHAR(30),
+    Forename VARCHAR(30) NOT NULL,
     Surname VARCHAR(30),
-    Email VARCHAR(50),
-    Password VARCHAR(255),
+    Email VARCHAR(50) NOT NULL,
+    Password VARCHAR(255) NOT NULL,
     Mobile VARCHAR(30),
-    Role VARCHAR(30),
+    Role VARCHAR(30) NOT NULL,
     -- can't bind foreign key here since the Addresses table isn't defined yet
-    AddressID INT,
-    UNIQUE (Email)
+    AddressID INT
 );
 
 -- didn't create the tables for Hosts or Guests since there aren't any extra attributes that need to be stored, unique to either tables, within the scope of this project
 
 CREATE TABLE Addresses (
     AddressID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    House VARCHAR(50),
+    House VARCHAR(50) NOT NULL,
     Street VARCHAR(50),
     Place VARCHAR(50),
-    Postcode VARCHAR(10),
-    PropertyID INT,
-    CONSTRAINT UC_Addresses UNIQUE (House, Postcode)
+    Postcode VARCHAR(10) NOT NULL
 );
 
 -- now we can bind the foreign key
@@ -33,22 +30,19 @@ ADD FOREIGN KEY (AddressID) REFERENCES Addresses(AddressID);
 
 CREATE TABLE Properties (
     PropertyID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    PropertyName VARCHAR(30),
-    Description TEXT,
-    Location VARCHAR(50),
-    OfferBreakfast TINYINT,
-    StartDate Date,
-    EndDate Date,
-    UserID INT,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+    Name VARCHAR(30) NOT NULL,
+    Description TEXT NOT NULL,
+    Location VARCHAR(50) NOT NULL,
+    OfferBreakfast TINYINT NOT NULL,
+    UserID INT NOT NULL,
+    AddressID INT NOT NULL,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+    FOREIGN KEY (AddressID) REFERENCES Addresses(AddressID)
 );
 
-ALTER TABLE Addresses
-ADD FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID);
-
 CREATE TABLE Bookings (
-    UserID INT,
-    PropertyID INT,
+    UserID INT NOT NULL,
+    PropertyID INT NOT NULL,
     isAccepted TINYINT,
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
@@ -56,18 +50,13 @@ CREATE TABLE Bookings (
 
 CREATE TABLE ChargeBands (
     ChargeBandID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    StartDate Date,
-    EndDate Date,
-    PricePerNight DECIMAL(10,2),
-    ServiceCharge DECIMAL(10,2),
-    CleaningCharge DECIMAL(10,2)
-);
-
-CREATE TABLE PropertyChargeBands (
-    PropertyID INT,
-    ChargeBandID INT,
-    FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID),
-    FOREIGN KEY (ChargeBandID) REFERENCES ChargeBands(ChargeBandID)
+    StartDate Date NOT NULL,
+    EndDate Date NOT NULL,
+    PricePerNight DECIMAL(10,2) NOT NULL,
+    ServiceCharge DECIMAL(10,2) NOT NULL,
+    CleaningCharge DECIMAL(10,2) NOT NULL,
+    PropertyID INT NOT NULL,
+    FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
 );
 
 CREATE TABLE Reviews (

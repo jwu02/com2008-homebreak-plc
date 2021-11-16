@@ -120,47 +120,74 @@ public class RegistrationPanel extends JPanel {
 
     public void register() throws SQLException {
         try (Connection con = getConnection();) {
-            // MD5() sql function hashes the password - REMEMBER TO ADD TO QUERY LATER
-            String query = "INSERT INTO Users VALUES (null, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "SELECT UserID FROM Users WHERE Email=? LIMIT 1";
             PreparedStatement statement = con.prepareStatement(query);
             statement.clearParameters();
-            statement.setString(1, forename.getText());
-            statement.setString(2, surname.getText());
-            statement.setString(3, email.getText());
-            statement.setString(4, password.getText());
-            statement.setString(5, mobile.getText());
-            String role;
-            if (hostRole.isSelected()) {
-                role = "host";
-            } else {
-                role = "guest";
-            }
-            statement.setString(6, role);
-            statement.setInt(7, insertAddress()); // obtain id of address
+            statement.setString(1, email.getText());
 
-            statement.executeUpdate();
+            ResultSet resultSet = statement.executeQuery();
+
+            // if user with given email doesn't exist already insert otherwise return error message
+            if (!resultSet.isBeforeFirst()) {
+                // MD5() sql function hashes the password - REMEMBER TO ADD TO QUERY LATER
+                query = "INSERT INTO Users VALUES (null, ?, ?, ?, ?, ?, ?, ?)";
+                statement = con.prepareStatement(query);
+                statement.clearParameters();
+                statement.setString(1, forename.getText());
+                statement.setString(2, surname.getText());
+                statement.setString(3, email.getText());
+                statement.setString(4, password.getText());
+                statement.setString(5, mobile.getText());
+                String role;
+                if (hostRole.isSelected()) {
+                    role = "host";
+                } else {
+                    role = "guest";
+                }
+                statement.setString(6, role);
+                statement.setInt(7, insertAddress()); // obtain id of address
+
+                statement.executeUpdate();
+            } else {
+                throw new SQLException("User with provided email already exists.");
+            }
         }
     }
 
     public int insertAddress() throws SQLException {
         try (Connection con = getConnection()) {
-            String query = "INSERT INTO Addresses VALUES (null, ?, ?, ?, ?, null)";
-
-            PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            String query = "SELECT AddressID FROM Addresses WHERE House=? AND Postcode=? LIMIT 1";
+            PreparedStatement statement = con.prepareStatement(query);
             statement.clearParameters();
             statement.setString(1, house.getText());
-            statement.setString(2, street.getText());
-            statement.setString(3, place.getText());
-            statement.setString(4, postcode.getText());
+            statement.setString(2, postcode.getText());
 
-            int insertedRows = statement.executeUpdate();
+            ResultSet resultSet = statement.executeQuery();
 
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1);
-                } else {
-                    throw new SQLException("Failed to create address, no AddressID returned.");
+            // insert new address if address doesn't exist already otherwise return AddressID of existing address
+            if (!resultSet.isBeforeFirst()) {
+                query = "INSERT INTO Addresses VALUES (null, ?, ?, ?, ?)";
+
+                statement = con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+                statement.clearParameters();
+                statement.setString(1, house.getText());
+                statement.setString(2, street.getText());
+                statement.setString(3, place.getText());
+                statement.setString(4, postcode.getText());
+
+                int insertedRows = statement.executeUpdate();
+
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getInt(1);
+                    } else {
+                        throw new SQLException("Failed to create address, no AddressID returned.");
+                    }
                 }
+            } else {
+                resultSet.next();
+
+                return resultSet.getInt("AddressID");
             }
         }
     }
