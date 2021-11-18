@@ -1,5 +1,8 @@
 package views;
 
+import database.InsertAddress;
+import models.Address;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -145,49 +148,12 @@ public class RegistrationPanel extends JPanel {
                     role = "guest";
                 }
                 statement.setString(6, role);
-                statement.setInt(7, insertAddress()); // obtain id of address
+                Address addressToInsert = new Address(house.getText(),street.getText(),place.getText(),postcode.getText());
+                statement.setInt(7, InsertAddress.insertAddress(addressToInsert)); // obtain id of address
 
                 statement.executeUpdate();
             } else {
                 throw new SQLException("User with provided email already exists.");
-            }
-        }
-    }
-
-    public int insertAddress() throws SQLException {
-        try (Connection con = getConnection()) {
-            String query = "SELECT AddressID FROM Addresses WHERE House=? AND Postcode=? LIMIT 1";
-            PreparedStatement statement = con.prepareStatement(query);
-            statement.clearParameters();
-            statement.setString(1, house.getText());
-            statement.setString(2, postcode.getText());
-
-            ResultSet resultSet = statement.executeQuery();
-
-            // insert new address if address doesn't exist already otherwise return AddressID of existing address
-            if (!resultSet.isBeforeFirst()) {
-                query = "INSERT INTO Addresses VALUES (null, ?, ?, ?, ?)";
-
-                statement = con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
-                statement.clearParameters();
-                statement.setString(1, house.getText());
-                statement.setString(2, street.getText());
-                statement.setString(3, place.getText());
-                statement.setString(4, postcode.getText());
-
-                int insertedRows = statement.executeUpdate();
-
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        return generatedKeys.getInt(1);
-                    } else {
-                        throw new SQLException("Failed to create address, no AddressID returned.");
-                    }
-                }
-            } else {
-                resultSet.next();
-
-                return resultSet.getInt("AddressID");
             }
         }
     }
