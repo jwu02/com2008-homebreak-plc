@@ -31,18 +31,33 @@ public class MainFrame extends JFrame {
 
             tabs.addTab("Search Property", searchPropertyPanel);
 
-            JPanel loginPanel = new JPanel();
-            loginPanel.setLayout(new BoxLayout(loginPanel,BoxLayout.Y_AXIS));
-            loginPanel.add(new JLabel("Login"));
-            JPanel loginSection = new JPanel(new GridLayout(2,2));
-            loginSection.add(new JLabel("Email"));
-            JTextField email = new JTextField();
-            loginSection.add(email);
+            // create property panel for testing, delete later
+            CreatePropertyPanel createPropertyPanel = new CreatePropertyPanel();
+            tabs.addTab("Create Property", createPropertyPanel);
 
-            loginSection.add(new JLabel("Password"));
-            JTextField password = new JPasswordField();
-            loginSection.add(password);
-            loginPanel.add(loginSection);
+            JPanel loginPanel = new JPanel(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.gridwidth = 2;
+            loginPanel.add(new JLabel("Login"),gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            gbc.gridwidth = 1;
+            loginPanel.add(new JLabel("Email"),gbc);
+            JTextField email = new JTextField(20);
+            gbc.gridx = 1;
+            gbc.gridy = 1;
+            loginPanel.add(email,gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            loginPanel.add(new JLabel("Password"),gbc);
+            JTextField password = new JPasswordField(20);
+            gbc.gridx = 1;
+            gbc.gridy = 2;
+            loginPanel.add(password,gbc);
 
             JButton loginButton = new JButton("Login");
             loginButton.addActionListener(e -> {
@@ -68,7 +83,10 @@ public class MainFrame extends JFrame {
                     ex.printStackTrace();
                 }
             });
-            loginPanel.add(loginButton);
+            gbc.gridx = 0;
+            gbc.gridy = 3;
+            gbc.gridwidth = 2;
+            loginPanel.add(loginButton,gbc);
 
             tabs.addTab("Login", loginPanel);
             tabs.addTab("Register", registrationPanel);

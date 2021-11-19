@@ -52,8 +52,7 @@ public class RegistrationPanel extends JPanel {
         };
 
         add(new JLabel("Register"));
-        JPanel userSection = new JPanel();
-        userSection.setLayout(new GridLayout(6,2));
+        JPanel userSection = new JPanel(new GridLayout(6,2));
         userSection.add(new JLabel("Forename"));
         userSection.add(forename);
         forename.getDocument().addDocumentListener(requireFilledListener);
@@ -89,8 +88,7 @@ public class RegistrationPanel extends JPanel {
         add(userSection);
 
         add(new JLabel("Address Details"));
-        JPanel addressSection = new JPanel();
-        addressSection.setLayout(new GridLayout(4,2));
+        JPanel addressSection = new JPanel(new GridLayout(4,2));
         addressSection.add(new JLabel("House"));
         addressSection.add(house);
         addressSection.add(new JLabel("Street"));

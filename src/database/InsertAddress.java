@@ -28,7 +28,7 @@ public class InsertAddress {
                 statement.setString(3, addressToInsert.getPlace());
                 statement.setString(4, addressToInsert.getPostcode());
 
-                int insertedRows = statement.executeUpdate();
+                int insertedRow = statement.executeUpdate();
 
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
