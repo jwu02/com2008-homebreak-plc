@@ -32,8 +32,7 @@ CREATE TABLE Properties (
     PropertyID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     Name VARCHAR(30) NOT NULL,
     Description TEXT NOT NULL,
-    Location VARCHAR(50) NOT NULL,
-    OfferBreakfast TINYINT NOT NULL,
+    OfferBreakfast TINYINT(1) NOT NULL,
     UserID INT NOT NULL,
     AddressID INT NOT NULL,
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
@@ -43,7 +42,7 @@ CREATE TABLE Properties (
 CREATE TABLE Bookings (
     UserID INT NOT NULL,
     PropertyID INT NOT NULL,
-    isAccepted TINYINT,
+    isAccepted TINYINT(1),
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
 );
@@ -75,8 +74,8 @@ CREATE TABLE Reviews (
 -- tables for facilities
 CREATE TABLE SleepingFacilities (
     PropertyID INT,
-    HasBedLinen TINYINT,
-    HasTowels TINYINT,
+    HasBedLinen TINYINT(1),
+    HasTowels TINYINT(1),
     FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
 );
 
@@ -90,63 +89,63 @@ CREATE TABLE Bedrooms (
 
 CREATE TABLE BathingFacilities (
     PropertyID INT,
-    HasHairDryer TINYINT,
-    HasShampoo TINYINT,
-    HasToiletPaper TINYINT,
+    HasHairDryer TINYINT(1),
+    HasShampoo TINYINT(1),
+    HasToiletPaper TINYINT(1),
     FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
 );
 
 CREATE TABLE Bathrooms (
     BathroomID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    HasToilet TINYINT,
-    HasBath TINYINT,
-    HasShower TINYINT,
-    SharedWithHost TINYINT,
+    HasToilet TINYINT(1),
+    HasBath TINYINT(1),
+    HasShower TINYINT(1),
+    SharedWithHost TINYINT(1),
     PropertyID INT,
     FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
 );
 
 CREATE TABLE KitchenFacilities (
     PropertyID INT,
-    HasRefrigerator TINYINT,
-    HasMicrowave TINYINT,
-    HasOven TINYINT,
-    HasStove TINYINT,
-    HasDishwasher TINYINT,
-    HasTableware TINYINT,
-    HasCookware TINYINT,
-    HasBasicProvisions TINYINT,
+    HasRefrigerator TINYINT(1),
+    HasMicrowave TINYINT(1),
+    HasOven TINYINT(1),
+    HasStove TINYINT(1),
+    HasDishwasher TINYINT(1),
+    HasTableware TINYINT(1),
+    HasCookware TINYINT(1),
+    HasBasicProvisions TINYINT(1),
     FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
 );
 
 CREATE TABLE LivingFacilities (
     PropertyID INT,
-    HasWifi TINYINT,
-    HasTelevision TINYINT,
-    HasSatellite TINYINT,
-    HasStreaming TINYINT,
-    HasDvdPlayer TINYINT,
-    HasBoardGames TINYINT,
+    HasWifi TINYINT(1),
+    HasTelevision TINYINT(1),
+    HasSatellite TINYINT(1),
+    HasStreaming TINYINT(1),
+    HasDvdPlayer TINYINT(1),
+    HasBoardGames TINYINT(1),
     FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
 );
 
 CREATE TABLE UtilityFacilities (
     PropertyID INT,
-    HasHeating TINYINT,
-    HasWashingMachine TINYINT,
-    HasDryingMachine TINYINT,
-    HasFireExtinguisher TINYINT,
-    HasSmokeAlarm TINYINT,
-    HasFirstAidKit TINYINT,
+    HasHeating TINYINT(1),
+    HasWashingMachine TINYINT(1),
+    HasDryingMachine TINYINT(1),
+    HasFireExtinguisher TINYINT(1),
+    HasSmokeAlarm TINYINT(1),
+    HasFirstAidKit TINYINT(1),
     FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
 );
 
 CREATE TABLE OutdoorFacilities (
     PropertyID INT,
-    HasFreeOnsiteParking TINYINT,
-    HasOnroadParking TINYINT,
-    HasPaidCarPark TINYINT,
-    HasPatio TINYINT,
-    HasBarbecue TINYINT,
+    HasFreeOnsiteParking TINYINT(1),
+    HasOnroadParking TINYINT(1),
+    HasPaidCarPark TINYINT(1),
+    HasPatio TINYINT(1),
+    HasBarbecue TINYINT(1),
     FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
 );
