@@ -120,36 +120,36 @@ public class RegistrationPanel extends JPanel {
     }
 
     public void register() throws SQLException {
-        try (Connection con = getConnection();) {
+        try (Connection con = getConnection()) {
             String query = "SELECT UserID FROM Users WHERE Email=? LIMIT 1";
-            PreparedStatement statement = con.prepareStatement(query);
-            statement.clearParameters();
-            statement.setString(1, email.getText());
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.clearParameters();
+            pst.setString(1, email.getText());
 
-            ResultSet resultSet = statement.executeQuery();
+            ResultSet resultSet = pst.executeQuery();
 
             // if user with given email doesn't exist already insert otherwise return error message
             if (!resultSet.isBeforeFirst()) {
                 // MD5() sql function hashes the password - REMEMBER TO ADD TO QUERY LATER
                 query = "INSERT INTO Users VALUES (null, ?, ?, ?, ?, ?, ?, ?)";
-                statement = con.prepareStatement(query);
-                statement.clearParameters();
-                statement.setString(1, forename.getText());
-                statement.setString(2, surname.getText());
-                statement.setString(3, email.getText());
-                statement.setString(4, password.getText());
-                statement.setString(5, mobile.getText());
+                pst = con.prepareStatement(query);
+                pst.clearParameters();
+                pst.setString(1, forename.getText());
+                pst.setString(2, surname.getText());
+                pst.setString(3, email.getText());
+                pst.setString(4, password.getText());
+                pst.setString(5, mobile.getText());
                 String role;
                 if (hostRole.isSelected()) {
                     role = "host";
                 } else {
                     role = "guest";
                 }
-                statement.setString(6, role);
+                pst.setString(6, role);
                 Address addressToInsert = new Address(house.getText(),street.getText(),place.getText(),postcode.getText());
-                statement.setInt(7, InsertAddress.insertAddress(addressToInsert)); // obtain id of address
+                pst.setInt(7, InsertAddress.insertAddress(addressToInsert)); // obtain id of address
 
-                statement.executeUpdate();
+                pst.executeUpdate();
             } else {
                 throw new SQLException("User with provided email already exists.");
             }

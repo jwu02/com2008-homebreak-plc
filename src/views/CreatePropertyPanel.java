@@ -24,10 +24,10 @@ public class CreatePropertyPanel extends JPanel {
     private JTextField place = new JTextField(20);
     private JTextField postcode = new JTextField(20);
 
-    JPanel chargeBandSection = new JPanel();
-    JPanel addedChargeBandSection = new JPanel();
+    private JPanel chargeBandSection = new JPanel();
+    private JPanel addedChargeBandSection = new JPanel();
 
-    ArrayList<ChargeBand> chargeBandsList = new ArrayList<>();
+    private ArrayList<ChargeBand> chargeBandsList = new ArrayList<>();
     private JTextField startDate = new JTextField("yyyy-mm-dd");
     private JTextField endDate = new JTextField("yyyy-mm-dd");
     private JTextField pricePerNight = new JTextField(10);

@@ -44,31 +44,40 @@ public class LoginPanel extends JPanel {
         add(password,gbc);
 
         loginButton.addActionListener(e -> {
-            try {
-                try (Connection con = getConnection()) {
-                    String query = "SELECT * FROM Users WHERE Email=? AND Password=? LIMIT 1";
-                    PreparedStatement statement = con.prepareStatement(query);
-                    statement.clearParameters();
-                    statement.setString(1, email.getText());
-                    statement.setString(2, password.getText());
-
-                    ResultSet resultSet = statement.executeQuery();
-
-                    if (!resultSet.isBeforeFirst()) {
-                        System.out.println("Invalid credentials");
-                    } else {
-                        System.out.println("You have successfully logged in!");
-                        mainFrame.dispose();
-                        new MainFrame(new User(resultSet));
-                    }
+            if (email.getText().equals("") || String.valueOf(password.getPassword()).equals("")) {
+                JOptionPane.showMessageDialog(this, "Please fill in all fields.",
+                        "Login", JOptionPane.WARNING_MESSAGE);
+            } else {
+                try {
+                    login();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
             }
         });
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
         add(loginButton,gbc);
+    }
+
+    public void login() throws SQLException {
+        try (Connection con = getConnection()) {
+            String query = "SELECT * FROM Users WHERE Email=? AND Password=? LIMIT 1";
+            PreparedStatement statement = con.prepareStatement(query);
+            statement.clearParameters();
+            statement.setString(1, email.getText());
+            statement.setString(2, String.valueOf(password.getPassword()));
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (!resultSet.isBeforeFirst()) {
+                System.out.println("Invalid credentials");
+            } else {
+                System.out.println("You have successfully logged in!");
+                mainFrame.dispose();
+                new MainFrame(new User(resultSet));
+            }
+        }
     }
 }
