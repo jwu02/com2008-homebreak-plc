@@ -14,21 +14,21 @@ import java.sql.*;
 import static database.OpenConnection.getConnection;
 
 public class RegistrationPanel extends JPanel {
-    public JTextField forename = new JTextField();
-    public JTextField surname = new JTextField();
-    public JTextField email = new JTextField();
-    public JTextField password = new JPasswordField();
-    public JTextField mobile = new JTextField();
+    private JTextField forename = new JTextField();
+    private JTextField surname = new JTextField();
+    private JTextField email = new JTextField();
+    private JTextField password = new JPasswordField();
+    private JTextField mobile = new JTextField();
 
-    public JRadioButton hostRole = new JRadioButton("Host");
-    public JRadioButton guestRole = new JRadioButton("Guest");
+    private JRadioButton hostRole = new JRadioButton("Host");
+    private JRadioButton guestRole = new JRadioButton("Guest");
 
-    public JTextField house = new JTextField();
-    public JTextField street = new JTextField();
-    public JTextField place = new JTextField();
-    public JTextField postcode = new JTextField();
+    private JTextField house = new JTextField();
+    private JTextField street = new JTextField();
+    private JTextField place = new JTextField();
+    private JTextField postcode = new JTextField();
 
-    public JButton registerButton = new JButton("Register");
+    private JButton registerButton = new JButton("Register");
 
     public RegistrationPanel() {
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));

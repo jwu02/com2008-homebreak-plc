@@ -17,7 +17,7 @@ import static database.OpenConnection.getConnection;
 public class CreatePropertyPanel extends JPanel {
     private JTextField name = new JTextField(20);
     private JTextArea description = new JTextArea();
-    private JComboBox offerBreakfast = new JComboBox(new String[]{"", "yes", "no"});
+    private JCheckBox offerBreakfast = new JCheckBox();
 
     private JTextField house = new JTextField(20);
     private JTextField street = new JTextField(20);
@@ -46,7 +46,7 @@ public class CreatePropertyPanel extends JPanel {
         propertySection.add(name);
         propertySection.add(new JLabel("Description"));
         propertySection.add(description);
-        propertySection.add(new JLabel("Offer breakfast"));
+        propertySection.add(new JLabel("Offer breakfast?"));
         propertySection.add(offerBreakfast);
         add(propertySection);
 
@@ -114,14 +114,13 @@ public class CreatePropertyPanel extends JPanel {
         add(chargeBandSection);
 
         createPropertyButton.addActionListener(e -> {
-            if (name.getText().equals("") || description.getText().equals("") ||
-                    offerBreakfast.getSelectedItem().equals("") || house.getText().equals("") ||
+            if (name.getText().equals("") || description.getText().equals("") || house.getText().equals("") ||
                     street.getText().equals("") || place.getText().equals("") || postcode.getText().equals("")) {
                 JOptionPane.showMessageDialog(this, "Please fill in all fields.",
                         "Add Charge Band", JOptionPane.WARNING_MESSAGE);
             } else {
                 try {
-                    insertChargeBands();
+                    insertChargeBands(); // in turn calls insertProperty()
                     clearPropertyFields();
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error adding property",
@@ -195,7 +194,7 @@ public class CreatePropertyPanel extends JPanel {
     public void clearPropertyFields() {
         name.setText("");
         description.setText("");
-        offerBreakfast.setSelectedIndex(0);
+        offerBreakfast.setSelected(false);
         house.setText("");
         street.setText("");
         place.setText("");
@@ -245,7 +244,7 @@ public class CreatePropertyPanel extends JPanel {
             pst.clearParameters();
             pst.setString(1,name.getText());
             pst.setString(2,description.getText());
-            pst.setBoolean(3,offerBreakfast.getSelectedItem().equals("yes"));
+            pst.setBoolean(3,offerBreakfast.isSelected());
             pst.setInt(4,MainFrame.loggedInUser.getUserID());
             Address addressToInsert = new Address(house.getText(),street.getText(),place.getText(),postcode.getText());
             pst.setInt(5, InsertAddress.insertAddress(addressToInsert));

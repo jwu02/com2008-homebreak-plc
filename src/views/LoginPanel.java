@@ -1,4 +1,3 @@
-/*
 package views;
 
 import models.User;
@@ -13,25 +12,37 @@ import java.sql.SQLException;
 import static database.OpenConnection.getConnection;
 
 public class LoginPanel extends JPanel {
-    public JTextField email = new JTextField();
-    public JTextField password = new JPasswordField();
-    public JButton loginButton = new JButton("Login");
+    private JTextField email = new JTextField(20);
+    private JPasswordField password = new JPasswordField(20);
+    private JButton loginButton = new JButton("Login");
 
-    public LoginPanel() {
-        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+    // login panel takes mainframe in constructor, so we can dispose mainframe later when logging in
+    private MainFrame mainFrame;
 
-        add(new JLabel("Login"));
-        JPanel loginSection = new JPanel(new GridLayout(2,2));
-        loginSection.add(new JLabel("Email"));
-        JTextField email = new JTextField();
-        loginSection.add(email);
+    public LoginPanel(MainFrame mainFrame) {
+        setLayout(new GridBagLayout());
 
-        loginSection.add(new JLabel("Password"));
-        JTextField password = new JPasswordField();
-        loginSection.add(password);
-        add(loginSection);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        add(new JLabel("Login"),gbc);
 
-        JButton loginButton = new JButton("Login");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        add(new JLabel("Email"),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        add(email,gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        add(new JLabel("Password"),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        add(password,gbc);
+
         loginButton.addActionListener(e -> {
             try {
                 try (Connection con = getConnection()) {
@@ -47,16 +58,17 @@ public class LoginPanel extends JPanel {
                         System.out.println("Invalid credentials");
                     } else {
                         System.out.println("You have successfully logged in!");
-                        dispose();
-                        loggedInUser = new User(resultSet);
-                        MainFrame newFrame = new MainFrame(MainFrame.loggedInUser);
+                        mainFrame.dispose();
+                        new MainFrame(new User(resultSet));
                     }
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
         });
-        add(loginButton);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        add(loginButton,gbc);
     }
 }
-*/
