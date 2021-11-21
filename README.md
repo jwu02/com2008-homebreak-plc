@@ -5,5 +5,4 @@
     - wrong credentials entered at login
     - user with email supplied already exists
 
-- more information required when creating a property
-    - information about different facilities
+- implement insertBedroom and insertBathroom functions in CreatePropertyPanel
