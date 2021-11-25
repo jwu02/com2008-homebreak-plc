@@ -9,8 +9,8 @@ public class MainFrame extends JFrame {
 
     private JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
 
-    public MainFrame(User loggedInUser) {
-        super("Homebreak PLC");
+    public MainFrame(String title, User loggedInUser) {
+        super(title);
         setSize(840,420);
 
         this.loggedInUser = loggedInUser;
@@ -30,11 +30,17 @@ public class MainFrame extends JFrame {
             tabs.addTab("Settings", new SettingsPanel());
         }
         add(tabs);
+
+        JScrollPane scrollPane = new JScrollPane(tabs);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        add(scrollPane);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
     public static void main(String[] args) {
-        new MainFrame(new User());
+        new MainFrame("Homebreak PLC",new User());
     }
 }

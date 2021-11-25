@@ -22,6 +22,8 @@ public class LoginPanel extends JPanel {
     public LoginPanel(MainFrame mainFrame) {
         setLayout(new GridBagLayout());
 
+        this.mainFrame = mainFrame;
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -76,7 +78,7 @@ public class LoginPanel extends JPanel {
             } else {
                 System.out.println("You have successfully logged in!");
                 mainFrame.dispose();
-                new MainFrame(new User(resultSet));
+                new MainFrame("Homebreak PLC",new User(resultSet));
             }
         }
     }
