@@ -4,119 +4,131 @@ import database.InsertAddress;
 import models.Address;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.sql.*;
 
 import static database.OpenConnection.getConnection;
 
 public class RegistrationPanel extends JPanel {
-    private JTextField forename = new JTextField();
-    private JTextField surname = new JTextField();
-    private JTextField email = new JTextField();
-    private JTextField password = new JPasswordField();
-    private JTextField mobile = new JTextField();
+    private JTextField forename = new JTextField(20);
+    private JTextField surname = new JTextField(20);
+    private JTextField email = new JTextField(20);
+    private JTextField password = new JPasswordField(20);
+    private JTextField mobile = new JTextField(20);
 
-    private JRadioButton hostRole = new JRadioButton("Host");
-    private JRadioButton guestRole = new JRadioButton("Guest");
+    private JRadioButton hostRadioButton = new JRadioButton("Host");
+    private JRadioButton guestRadioButton = new JRadioButton("Guest");
 
-    private JTextField house = new JTextField();
-    private JTextField street = new JTextField();
-    private JTextField place = new JTextField();
-    private JTextField postcode = new JTextField();
+    private JTextField house = new JTextField(20);
+    private JTextField street = new JTextField(20);
+    private JTextField place = new JTextField(20);
+    private JTextField postcode = new JTextField(20);
 
     private JButton registerButton = new JButton("Register");
 
     public RegistrationPanel() {
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 
-        // listener object for text fields which are required to be filled in
-        DocumentListener requireFilledListener = new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                requiredInformationFilled();
-            }
+        JPanel userDetailsPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        userDetailsPanel.add(new JLabel("User Details"),gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        userDetailsPanel.add(new JLabel("Forename"),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        userDetailsPanel.add(forename,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        userDetailsPanel.add(new JLabel("Surname"),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        userDetailsPanel.add(surname,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        userDetailsPanel.add(new JLabel("Email"),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        userDetailsPanel.add(email,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        userDetailsPanel.add(new JLabel("Password"),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        userDetailsPanel.add(password,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        userDetailsPanel.add(new JLabel("Mobile"),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        userDetailsPanel.add(mobile,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        userDetailsPanel.add(new JLabel("Register as"),gbc);
+        ButtonGroup roleButtonGroup = new ButtonGroup();
+        roleButtonGroup.add(hostRadioButton);
+        roleButtonGroup.add(guestRadioButton);
+        gbc.gridx = 1;
+        gbc.gridy = 6;
+        userDetailsPanel.add(hostRadioButton,gbc);
+        gbc.gridx = 2;
+        gbc.gridy = 6;
+        userDetailsPanel.add(guestRadioButton,gbc);
+        add(userDetailsPanel);
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                requiredInformationFilled();
-            }
+        JPanel addressDetailsPanel = new JPanel(new GridBagLayout());
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        addressDetailsPanel.add(new JLabel("Address Details"),gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        addressDetailsPanel.add(new JLabel("House"),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        addressDetailsPanel.add(house,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        addressDetailsPanel.add(new JLabel("Street"),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        addressDetailsPanel.add(street,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        addressDetailsPanel.add(new JLabel("Place"),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        addressDetailsPanel.add(place,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        addressDetailsPanel.add(new JLabel("Postcode"),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        addressDetailsPanel.add(postcode,gbc);
+        add(addressDetailsPanel);
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                requiredInformationFilled();
-            }
-        };
-
-        add(new JLabel("Register"));
-        JPanel userSection = new JPanel(new GridLayout(6,2));
-        userSection.add(new JLabel("Forename"));
-        userSection.add(forename);
-        forename.getDocument().addDocumentListener(requireFilledListener);
-        userSection.add(new JLabel("Surname"));
-        userSection.add(surname);
-        userSection.add(new JLabel("Email"));
-        userSection.add(email);
-        email.getDocument().addDocumentListener(requireFilledListener);
-        userSection.add(new JLabel("Password"));
-        userSection.add(password);
-        password.getDocument().addDocumentListener(requireFilledListener);
-        userSection.add(new JLabel("Mobile"));
-        userSection.add(mobile);
-
-        userSection.add(new JLabel("Register as"));
-        ButtonGroup roleGroup = new ButtonGroup();
-        // listener object for the role radio selection
-        ItemListener radioItemListener = new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                requiredInformationFilled();
-            }
-        };
-        hostRole.addItemListener(radioItemListener);
-        guestRole.addItemListener(radioItemListener);
-        roleGroup.add(hostRole);
-        roleGroup.add(guestRole);
-        JPanel rolePanel = new JPanel();
-        rolePanel.add(hostRole);
-        rolePanel.add(guestRole);
-        userSection.add(rolePanel);
-
-        add(userSection);
-
-        add(new JLabel("Address Details"));
-        JPanel addressSection = new JPanel(new GridLayout(4,2));
-        addressSection.add(new JLabel("House"));
-        addressSection.add(house);
-        addressSection.add(new JLabel("Street"));
-        addressSection.add(street);
-        addressSection.add(new JLabel("Place"));
-        addressSection.add(place);
-        addressSection.add(new JLabel("Postcode"));
-        addressSection.add(postcode);
-        add(addressSection);
-
-        registerButton.setEnabled(false);
         registerButton.addActionListener(e -> {
-            try {
-                register();
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            if (forename.getText().equals("") || email.getText().equals("") || password.getText().equals("") ||
+                    mobile.getText().equals("") || !(hostRadioButton.isSelected() || guestRadioButton.isSelected())) {
+                JOptionPane.showMessageDialog(this, "Please fill in all fields.",
+                        "Registration", JOptionPane.WARNING_MESSAGE);
+            } else {
+                try {
+                    register();
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error registering user.",
+                            "Registration", JOptionPane.WARNING_MESSAGE);
+                    ex.printStackTrace();
+                }
             }
         });
         add(registerButton);
-    }
-
-    public void requiredInformationFilled() {
-        if (forename.getText().equals("") || email.getText().equals("") || password.getText().equals("") ||
-                !(hostRole.isSelected() || guestRole.isSelected())) {
-            registerButton.setEnabled(false);
-        } else {
-            registerButton.setEnabled(true);
-        }
     }
 
     public void register() throws SQLException {
@@ -140,7 +152,7 @@ public class RegistrationPanel extends JPanel {
                 pst.setString(4, password.getText());
                 pst.setString(5, mobile.getText());
                 String role;
-                if (hostRole.isSelected()) {
+                if (hostRadioButton.isSelected()) {
                     role = "host";
                 } else {
                     role = "guest";
