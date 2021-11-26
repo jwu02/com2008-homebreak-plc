@@ -2,6 +2,7 @@ package views;
 
 import database.InsertAddress;
 import models.Address;
+import models.Bathroom;
 import models.Bedroom;
 import models.ChargeBand;
 
@@ -12,6 +13,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static database.OpenConnection.getConnection;
 
@@ -40,19 +42,32 @@ public class CreatePropertyPanel extends JPanel {
 
     // facilities
     // sleeping facility
-    private ArrayList<Bedroom> bedroomsList = new ArrayList<>();
+    JPanel sleepingFacilityPanel = new JPanel();
     private JCheckBox hasBedLinen = new JCheckBox("Bed Linen");
     private JCheckBox hasTowels = new JCheckBox("Towels");
     // bedroom
-    private JTextField bed1 = new JTextField(20);
-    private JTextField bed2 = new JTextField(20);
+    private ArrayList<Bedroom> bedroomsList = new ArrayList<>();
+    private JPanel addBedroomsPanel = new JPanel(new GridBagLayout());
+    private JRadioButton singleBed1RadioButton = new JRadioButton("single");
+    private JRadioButton doubleBed1RadioButton = new JRadioButton("double");
+    private JRadioButton kingsizeBed1RadioButton = new JRadioButton("kingsize");
+    private JRadioButton bunkBed1RadioButton = new JRadioButton("bunk");
+
+    private JRadioButton singleBed2RadioButton = new JRadioButton("single");
+    private JRadioButton doubleBed2RadioButton = new JRadioButton("double");
+    private JRadioButton kingsizeBed2RadioButton = new JRadioButton("kingsize");
+    private JRadioButton bunkBed2RadioButton = new JRadioButton("bunk");
+    private JRadioButton noBed2RadioButton = new JRadioButton("no bed 2");
     private JButton addBedroomButton = new JButton("Add Bedroom");
 
     // bathing facility
+    private JPanel bathingFacilityPanel = new JPanel();
     private JCheckBox hasHairDryer = new JCheckBox("Hair Dryer");
     private JCheckBox hasShampoo = new JCheckBox("Shampoo");
     private JCheckBox hasToiletPaper = new JCheckBox("Toilet Paper");
     // bathroom
+    private ArrayList <Bathroom> bathroomsList = new ArrayList<>();
+    private JPanel addBathroomsPanel = new JPanel();
     private JCheckBox hasToilet = new JCheckBox("Toilet");
     private JCheckBox hasBath = new JCheckBox("Bath");
     private JCheckBox hasShower = new JCheckBox("Shower");
@@ -60,6 +75,7 @@ public class CreatePropertyPanel extends JPanel {
     private JButton addBathroomButton = new JButton("Add Bathroom");
 
     // kitchen facility
+    private JPanel kitchenFacilityPanel = new JPanel();
     private JCheckBox hasRefrigerator = new JCheckBox("Refrigerator");
     private JCheckBox hasMicrowave = new JCheckBox("Microwave");
     private JCheckBox hasOven = new JCheckBox("Oven");
@@ -70,6 +86,7 @@ public class CreatePropertyPanel extends JPanel {
     private JCheckBox hasBasicProvisions = new JCheckBox("Basic Provisions");
 
     // living facility
+    private JPanel livingFacilityPanel = new JPanel();
     private JCheckBox hasWifi = new JCheckBox("Wifi");
     private JCheckBox hasTelevision = new JCheckBox("Television");
     private JCheckBox hasSatellite = new JCheckBox("Satellite");
@@ -78,6 +95,7 @@ public class CreatePropertyPanel extends JPanel {
     private JCheckBox hasBoardGames = new JCheckBox("Board Games");
 
     // utility facility
+    private JPanel utilityFacilityPanel = new JPanel();
     private JCheckBox hasHeating = new JCheckBox("Heating");
     private JCheckBox hasWashingMachine = new JCheckBox("Washing Machine");
     private JCheckBox hasDryingMachine = new JCheckBox("Drying Machine");
@@ -86,6 +104,7 @@ public class CreatePropertyPanel extends JPanel {
     private JCheckBox hasFirstAidKit = new JCheckBox("First Aid Kit");
 
     // outdoor facility
+    private JPanel outdoorFacilityPanel = new JPanel();
     private JCheckBox hasFreeOnsiteParking = new JCheckBox("Free Onsite Parking");
     private JCheckBox hasOnRoadParking = new JCheckBox("On Road Parking");
     private JCheckBox hasPaidCarPark = new JCheckBox("Paid Car Park");
@@ -255,33 +274,89 @@ public class CreatePropertyPanel extends JPanel {
         facilitiesDetailsPanel.add(new JLabel("Facilities Details"));
 
         // sleeping facility
-        JPanel sleepingFacilityPanel = new JPanel();
         sleepingFacilityPanel.setLayout(new BoxLayout(sleepingFacilityPanel,BoxLayout.Y_AXIS));
         sleepingFacilityPanel.add(new JLabel("Sleeping Facility"));
         sleepingFacilityPanel.add(hasBedLinen);
         sleepingFacilityPanel.add(hasTowels);
         // add bedroom
-        JPanel addBedroomsPanel = new JPanel(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         addBedroomsPanel.add(new JLabel("Add Bedrooms"),gbc);
+        // bed 1
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
         addBedroomsPanel.add(new JLabel("Bed 1"),gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        addBedroomsPanel.add(bed1,gbc);
+        ButtonGroup bed1ButtonGroup = new ButtonGroup();
+        singleBed1RadioButton.setActionCommand("single");
+        bed1ButtonGroup.add(singleBed1RadioButton);
+        doubleBed1RadioButton.setActionCommand("double");
+        bed1ButtonGroup.add(doubleBed1RadioButton);
+        kingsizeBed1RadioButton.setActionCommand("kingsize");
+        bed1ButtonGroup.add(kingsizeBed1RadioButton);
+        bunkBed1RadioButton.setActionCommand("bunk");
+        bed1ButtonGroup.add(bunkBed1RadioButton);
         gbc.gridx = 0;
         gbc.gridy = 2;
-        addBedroomsPanel.add(new JLabel("Bed 2"),gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        addBedroomsPanel.add(bed2,gbc);
+        addBedroomsPanel.add(singleBed1RadioButton,gbc);
         gbc.gridx = 0;
         gbc.gridy = 3;
+        addBedroomsPanel.add(doubleBed1RadioButton,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        addBedroomsPanel.add(kingsizeBed1RadioButton,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        addBedroomsPanel.add(bunkBed1RadioButton,gbc);
+        // bed2
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        addBedroomsPanel.add(new JLabel("Bed 2"),gbc);
+        ButtonGroup bed2ButtonGroup = new ButtonGroup();
+        singleBed2RadioButton.setActionCommand("single");
+        bed2ButtonGroup.add(singleBed2RadioButton);
+        doubleBed2RadioButton.setActionCommand("double");
+        bed2ButtonGroup.add(doubleBed2RadioButton);
+        kingsizeBed2RadioButton.setActionCommand("kingsize");
+        bed2ButtonGroup.add(kingsizeBed2RadioButton);
+        bunkBed2RadioButton.setActionCommand("bunk");
+        bed2ButtonGroup.add(bunkBed2RadioButton);
+        noBed2RadioButton.setActionCommand("");
+        bed2ButtonGroup.add(noBed2RadioButton);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        addBedroomsPanel.add(singleBed2RadioButton,gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        addBedroomsPanel.add(doubleBed2RadioButton,gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        addBedroomsPanel.add(kingsizeBed2RadioButton,gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        addBedroomsPanel.add(bunkBed2RadioButton,gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 6;
+        addBedroomsPanel.add(noBed2RadioButton,gbc);
+
+        addBedroomButton.addActionListener(e -> {
+            if (bed1ButtonGroup.getSelection() == null || bed2ButtonGroup.getSelection() == null) {
+                JOptionPane.showMessageDialog(this, "Please select all options.",
+                        "Add Bedroom", JOptionPane.WARNING_MESSAGE);
+            } else {
+                bedroomsList.add(new Bedroom(bed1ButtonGroup.getSelection().getActionCommand(),
+                        bed2ButtonGroup.getSelection().getActionCommand()));
+
+                JOptionPane.showMessageDialog(this,"Added bedroom.");
+
+                bed1ButtonGroup.clearSelection();
+                bed2ButtonGroup.clearSelection();
+            }
+        });
+        gbc.gridx = 0;
+        gbc.gridy = 7;
         gbc.gridwidth = 2;
         addBedroomsPanel.add(addBedroomButton,gbc);
         sleepingFacilityPanel.add(addBedroomsPanel);
@@ -291,20 +366,29 @@ public class CreatePropertyPanel extends JPanel {
         facilitiesDetailsPanel.add(sleepingFacilityPanel,gbc);
 
         // bathing facility
-        JPanel bathingFacilityPanel = new JPanel();
         bathingFacilityPanel.setLayout(new BoxLayout(bathingFacilityPanel,BoxLayout.Y_AXIS));
         bathingFacilityPanel.add(new JLabel("Bathing Facility"));
         bathingFacilityPanel.add(hasHairDryer);
         bathingFacilityPanel.add(hasShampoo);
         bathingFacilityPanel.add(hasToiletPaper);
         // add bathroom
-        JPanel addBathroomsPanel = new JPanel();
         addBathroomsPanel.setLayout(new BoxLayout(addBathroomsPanel,BoxLayout.Y_AXIS));
         addBathroomsPanel.add(new JLabel("Add Bathrooms"));
         addBathroomsPanel.add(hasToilet);
         addBathroomsPanel.add(hasBath);
         addBathroomsPanel.add(hasShower);
         addBathroomsPanel.add(isSharedWithHost);
+        addBathroomButton.addActionListener(e -> {
+            bathroomsList.add(new Bathroom(hasToilet.isSelected(),hasBath.isSelected(),hasShower.isSelected(),
+                    isSharedWithHost.isSelected()));
+
+            JOptionPane.showMessageDialog(this,"Added bathroom.");
+
+            hasToilet.setSelected(false);
+            hasBath.setSelected(false);
+            hasShower.setSelected(false);
+            isSharedWithHost.setSelected(false);
+        });
         addBathroomsPanel.add(addBathroomButton);
         bathingFacilityPanel.add(addBathroomsPanel);
         gbc.gridx = 1;
@@ -312,7 +396,6 @@ public class CreatePropertyPanel extends JPanel {
         facilitiesDetailsPanel.add(bathingFacilityPanel,gbc);
 
         // kitchen facility
-        JPanel kitchenFacilityPanel = new JPanel();
         kitchenFacilityPanel.setLayout(new BoxLayout(kitchenFacilityPanel,BoxLayout.Y_AXIS));
         kitchenFacilityPanel.add(new JLabel("Kitchen Facility"));
         kitchenFacilityPanel.add(hasRefrigerator);
@@ -328,7 +411,6 @@ public class CreatePropertyPanel extends JPanel {
         facilitiesDetailsPanel.add(kitchenFacilityPanel,gbc);
 
         // living facility
-        JPanel livingFacilityPanel = new JPanel();
         livingFacilityPanel.setLayout(new BoxLayout(livingFacilityPanel,BoxLayout.Y_AXIS));
         livingFacilityPanel.add(new JLabel("Living Facility"));
         livingFacilityPanel.add(hasWifi);
@@ -342,7 +424,6 @@ public class CreatePropertyPanel extends JPanel {
         facilitiesDetailsPanel.add(livingFacilityPanel,gbc);
 
         // utility facility
-        JPanel utilityFacilityPanel = new JPanel();
         utilityFacilityPanel.setLayout(new BoxLayout(utilityFacilityPanel,BoxLayout.Y_AXIS));
         utilityFacilityPanel.add(new JLabel("Utility Facility"));
         utilityFacilityPanel.add(hasHeating);
@@ -356,7 +437,6 @@ public class CreatePropertyPanel extends JPanel {
         facilitiesDetailsPanel.add(utilityFacilityPanel,gbc);
 
         // outdoors facility
-        JPanel outdoorFacilityPanel = new JPanel();
         outdoorFacilityPanel.setLayout(new BoxLayout(outdoorFacilityPanel,BoxLayout.Y_AXIS));
         outdoorFacilityPanel.add(new JLabel("Outdoor Facility"));
         outdoorFacilityPanel.add(hasFreeOnsiteParking);
@@ -382,6 +462,9 @@ public class CreatePropertyPanel extends JPanel {
                     insertChargeBands();
                     insertFacilities();
                     clearPropertyFields();
+                    JOptionPane.showMessageDialog(this,"Property created.");
+
+                    cardLayout.show(this, "propertyDetails");
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error adding property",
                             "Add Property", JOptionPane.WARNING_MESSAGE);
@@ -486,7 +569,20 @@ public class CreatePropertyPanel extends JPanel {
     };
 
     public void clearFacilityFields() {
-
+        ArrayList<Component> componentsList = new ArrayList<>();
+        componentsList.addAll(Arrays.asList(sleepingFacilityPanel.getComponents()));
+        componentsList.addAll(Arrays.asList(addBedroomsPanel.getComponents()));
+        componentsList.addAll(Arrays.asList(bathingFacilityPanel.getComponents()));
+        componentsList.addAll(Arrays.asList(addBathroomsPanel.getComponents()));
+        componentsList.addAll(Arrays.asList(kitchenFacilityPanel.getComponents()));
+        componentsList.addAll(Arrays.asList(livingFacilityPanel.getComponents()));
+        componentsList.addAll(Arrays.asList(utilityFacilityPanel.getComponents()));
+        componentsList.addAll(Arrays.asList(outdoorFacilityPanel.getComponents()));
+        for(Component c : componentsList) {
+            if (c instanceof JCheckBox) {
+                ((JCheckBox) c).setSelected(false);
+            }
+        }
     }
 
     public void insertProperty() throws SQLException {
@@ -526,9 +622,8 @@ public class CreatePropertyPanel extends JPanel {
                 pst.setBigDecimal(4,cb.getServiceCharge());
                 pst.setBigDecimal(5,cb.getCleaningCharge());
                 pst.setInt(6,lastInsertedPropertyID);
-                pst.addBatch();
+                pst.executeUpdate();
             }
-            pst.executeBatch();
 
             addedChargeBandsPanel.removeAll();
             revalidate();
@@ -540,21 +635,22 @@ public class CreatePropertyPanel extends JPanel {
         try (Connection con = getConnection()) {
             String query = "INSERT INTO SleepingFacilities VALUES (?, ?, ?)";
             PreparedStatement pst = con.prepareStatement(query);
-
             pst.setInt(1,lastInsertedPropertyID);
             pst.setBoolean(2,hasBedLinen.isSelected());
             pst.setBoolean(3,hasTowels.isSelected());
-            pst.addBatch();
+            pst.executeUpdate();
 
             query = "INSERT INTO BathingFacilities VALUES (?, ?, ?, ?)";
+            pst.clearParameters();
             pst = con.prepareStatement(query);
             pst.setInt(1,lastInsertedPropertyID);
             pst.setBoolean(2,hasHairDryer.isSelected());
             pst.setBoolean(3,hasShampoo.isSelected());
             pst.setBoolean(4,hasToiletPaper.isSelected());
-            pst.addBatch();
+            pst.executeUpdate();
 
             query = "INSERT INTO KitchenFacilities VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            pst.clearParameters();
             pst = con.prepareStatement(query);
             pst.setInt(1,lastInsertedPropertyID);
             pst.setBoolean(2,hasRefrigerator.isSelected());
@@ -565,9 +661,10 @@ public class CreatePropertyPanel extends JPanel {
             pst.setBoolean(7,hasTableware.isSelected());
             pst.setBoolean(8,hasCookware.isSelected());
             pst.setBoolean(9,hasBasicProvisions.isSelected());
-            pst.addBatch();
+            pst.executeUpdate();
 
             query = "INSERT INTO LivingFacilities VALUES (?, ?, ?, ?, ?, ?, ?)";
+            pst.clearParameters();
             pst = con.prepareStatement(query);
             pst.setInt(1,lastInsertedPropertyID);
             pst.setBoolean(2,hasWifi.isSelected());
@@ -576,9 +673,10 @@ public class CreatePropertyPanel extends JPanel {
             pst.setBoolean(5,hasStreaming.isSelected());
             pst.setBoolean(6,hasDvdPlayer.isSelected());
             pst.setBoolean(7,hasBoardGames.isSelected());
-            pst.addBatch();
+            pst.executeUpdate();
 
             query = "INSERT INTO UtilityFacilities VALUES (?, ?, ?, ?, ?, ?, ?)";
+            pst.clearParameters();
             pst = con.prepareStatement(query);
             pst.setInt(1,lastInsertedPropertyID);
             pst.setBoolean(2,hasHeating.isSelected());
@@ -587,9 +685,10 @@ public class CreatePropertyPanel extends JPanel {
             pst.setBoolean(5,hasFireExtinguisher.isSelected());
             pst.setBoolean(6,hasSmokeAlarm.isSelected());
             pst.setBoolean(7,hasFirstAidKit.isSelected());
-            pst.addBatch();
+            pst.executeUpdate();
 
-            query = "INSERT INTO LivingFacilities VALUES (?, ?, ?, ?, ?, ?)";
+            query = "INSERT INTO OutdoorFacilities VALUES (?, ?, ?, ?, ?, ?)";
+            pst.clearParameters();
             pst = con.prepareStatement(query);
             pst.setInt(1,lastInsertedPropertyID);
             pst.setBoolean(2,hasFreeOnsiteParking.isSelected());
@@ -597,9 +696,7 @@ public class CreatePropertyPanel extends JPanel {
             pst.setBoolean(4,hasPaidCarPark.isSelected());
             pst.setBoolean(5,hasPatio.isSelected());
             pst.setBoolean(6,hasBarbecue.isSelected());
-            pst.addBatch();
-
-            pst.executeBatch();
+            pst.executeUpdate();
         }
 
         insertBedrooms();
@@ -607,10 +704,36 @@ public class CreatePropertyPanel extends JPanel {
     }
 
     public void insertBedrooms() throws SQLException {
+        try (Connection con = getConnection()) {
+            String query = "INSERT INTO Bedrooms VALUES (null, ?, ?, ?)";
+            PreparedStatement pst = con.prepareStatement(query);
+            for (Bedroom br : bedroomsList) {
+                pst.clearParameters();
+                pst.setString(1,br.getBed1());
+                pst.setString(2,br.getBed2());
+                pst.setInt(3,lastInsertedPropertyID);
+                pst.executeUpdate();
+            }
 
+            bedroomsList = new ArrayList<>();
+        }
     }
 
     public void insertBathrooms() throws SQLException {
+        try (Connection con = getConnection()) {
+            String query = "INSERT INTO Bathrooms VALUES (null, ?, ?, ?, ?, ?)";
+            PreparedStatement pst = con.prepareStatement(query);
+            for (Bathroom br : bathroomsList) {
+                pst.clearParameters();
+                pst.setBoolean(1,br.getHasToilet());
+                pst.setBoolean(2,br.getHasBath());
+                pst.setBoolean(3,br.getHasShower());
+                pst.setBoolean(4,br.getSharedWithHost());
+                pst.setInt(5,lastInsertedPropertyID);
+                pst.executeUpdate();
+            }
 
+            bathroomsList = new ArrayList<>();
+        }
     }
 }
