@@ -26,7 +26,6 @@ public class MainFrame extends JFrame {
             tabs.addTab("Search Property", new SearchPropertyPanel());
             tabs.addTab("Login", new LoginPanel(this));
             tabs.addTab("Register", new RegistrationPanel());
-            tabs.addTab("Create Property", new CreatePropertyPanel());
         } else {
             tabs.addTab("Home", new HomePanel());
             tabs.addTab("Search Property", new SearchPropertyPanel());

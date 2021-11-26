@@ -1,8 +1,5 @@
 # Todos
-- improve gui layout
-- further validation at registration for email and password
-- return popup error messages to UI if
-    - wrong credentials entered at login
-    - user with email supplied already exists
+- 
 
-- implement insertBedroom and insertBathroom functions in CreatePropertyPanel
+- passwords are currently unhashed, so logging into the database will be easier
+    - remember to hash later
