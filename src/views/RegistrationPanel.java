@@ -121,6 +121,7 @@ public class RegistrationPanel extends JPanel {
             } else {
                 try {
                     register();
+                    JOptionPane.showMessageDialog(this,"Successfully registered.");
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error registering user.",
                             "Registration", JOptionPane.WARNING_MESSAGE);
@@ -163,7 +164,8 @@ public class RegistrationPanel extends JPanel {
 
                 pst.executeUpdate();
             } else {
-                throw new SQLException("User with provided email already exists.");
+                String message = "User with provided email already exists.";
+                JOptionPane.showMessageDialog(this, message, "Registration", JOptionPane.WARNING_MESSAGE);
             }
         }
     }

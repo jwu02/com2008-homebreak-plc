@@ -3,6 +3,7 @@ package views;
 import models.User;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class MainFrame extends JFrame {
     public static User loggedInUser;
@@ -11,7 +12,12 @@ public class MainFrame extends JFrame {
 
     public MainFrame(String title, User loggedInUser) {
         super(title);
-        setSize(840,420);
+
+        int width = 840;
+        int height = 420;
+        setSize(width,height);
+        Point center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
+        setBounds(center.x - width / 2, center.y - height / 2, width, height);
 
         this.loggedInUser = loggedInUser;
 
@@ -34,6 +40,7 @@ public class MainFrame extends JFrame {
         JScrollPane scrollPane = new JScrollPane(tabs);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(15);
         add(scrollPane);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
