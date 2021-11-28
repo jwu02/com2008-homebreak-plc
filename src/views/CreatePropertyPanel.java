@@ -2,8 +2,8 @@ package views;
 
 import database.InsertAddress;
 import models.Address;
-import models.Bathroom;
-import models.Bedroom;
+import models.facilities.Bathroom;
+import models.facilities.Bedroom;
 import models.ChargeBand;
 
 import javax.swing.*;
@@ -595,7 +595,7 @@ public class CreatePropertyPanel extends JPanel {
             pst.setString(2,description.getText());
             pst.setBoolean(3,offerBreakfast.isSelected());
             pst.setInt(4,MainFrame.loggedInUser.getUserID());
-            Address addressToInsert = new Address(house.getText(),street.getText(),place.getText(),postcode.getText());
+            Address addressToInsert = new Address(0,house.getText(),street.getText(),place.getText(),postcode.getText());
             pst.setInt(5, InsertAddress.insertAddress(addressToInsert));
 
             pst.executeUpdate();

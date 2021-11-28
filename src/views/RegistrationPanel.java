@@ -159,7 +159,7 @@ public class RegistrationPanel extends JPanel {
                     role = "guest";
                 }
                 pst.setString(6, role);
-                Address addressToInsert = new Address(house.getText(),street.getText(),place.getText(),postcode.getText());
+                Address addressToInsert = new Address(0,house.getText(),street.getText(),place.getText(),postcode.getText());
                 pst.setInt(7, InsertAddress.insertAddress(addressToInsert)); // obtain id of address
 
                 pst.executeUpdate();

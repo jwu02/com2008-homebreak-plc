@@ -66,19 +66,28 @@ public class LoginPanel extends JPanel {
     public void login() throws SQLException {
         try (Connection con = getConnection()) {
             String query = "SELECT * FROM Users WHERE Email=? AND Password=? LIMIT 1";
-            PreparedStatement statement = con.prepareStatement(query);
-            statement.clearParameters();
-            statement.setString(1, email.getText());
-            statement.setString(2, String.valueOf(password.getPassword()));
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.clearParameters();
+            pst.setString(1, email.getText());
+            pst.setString(2, String.valueOf(password.getPassword()));
 
-            ResultSet resultSet = statement.executeQuery();
+            ResultSet resultSet = pst.executeQuery();
 
             if (!resultSet.isBeforeFirst()) {
                 System.out.println("Invalid credentials");
             } else {
                 System.out.println("You have successfully logged in!");
+
+                resultSet.next();
+                int userID = resultSet.getInt("UserID");
+                String forename = resultSet.getString("Forename");
+                String surname = resultSet.getString("Surname");
+                String email = resultSet.getString("Email");
+                String mobile = resultSet.getString("Mobile");
+                String role = resultSet.getString("Role");
+
                 mainFrame.dispose();
-                new MainFrame("Homebreak PLC",new User(resultSet));
+                new MainFrame("Homebreak PLC",new User(userID, forename, surname, email, mobile, role));
             }
         }
     }
