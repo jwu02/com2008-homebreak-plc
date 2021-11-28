@@ -12,22 +12,17 @@ public class User {
     private String role;
 
     public User() {
-
+        // keep empty constructor for initial startup of application
+        // when no users are logged in
     }
 
-    public User(ResultSet resultSet) {
-        try {
-            resultSet.next();
-            userID = resultSet.getInt("UserID");
-            forename = resultSet.getString("Forename");
-            surname = resultSet.getString("Surname");
-            email = resultSet.getString("Email");
-            mobile = resultSet.getString("Mobile");
-            role = resultSet.getString("Role");
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+    public User(int userID, String forename, String surname, String email, String mobile, String role) {
+        this.userID = userID;
+        this.forename = forename;
+        this.surname = surname;
+        this.email = email;
+        this.mobile = mobile;
+        this.role = role;
     }
 
     public int getUserID() {

@@ -1,8 +1,5 @@
 package models;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class Address {
     private int addressID;
     private String house;
@@ -10,7 +7,8 @@ public class Address {
     private String place;
     private String postcode;
 
-    public Address(String house, String street, String place, String postcode) {
+    public Address(int addressID, String house, String street, String place, String postcode) {
+        this.addressID = addressID;
         this.house = house;
         this.street = street;
         this.place = place;
