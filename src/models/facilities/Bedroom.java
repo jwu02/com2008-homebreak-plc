@@ -1,4 +1,4 @@
-package models;
+package models.facilities;
 
 public class Bedroom {
     private String bed1;
