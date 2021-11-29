@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import static database.OpenConnection.getConnection;
 
@@ -26,7 +27,7 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
     private JTextField requestEndDateField = new JTextField("yyyy-mm-dd");
     private JButton searchPropertyButton = new JButton("Search");
     private JPanel filteredPropertiesPanel = new JPanel();
-    private ArrayList<Property> filteredProperties = new ArrayList<>();
+    private ArrayList<Property> filteredProperties;
 
     public SearchPropertyPanel() {
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
@@ -47,6 +48,7 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals("Search")) {
+            filteredProperties = new ArrayList<>();
             try (Connection con = getConnection()) {
                 String query = "SELECT * FROM Properties AS p, Users AS u, Addresses AS a " +
                         "WHERE p.UserID = u.UserID " +
@@ -98,7 +100,7 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
                     }
 
                     // convert facility information to models
-                    ArrayList<Facility> facilitiesList = new ArrayList<>();
+                    LinkedHashMap<String, Facility> facilitiesMap = new LinkedHashMap<>();
 
                     ArrayList<Bedroom> bedroomsList = new ArrayList<>();
                     query = "SELECT * FROM Bedrooms WHERE PropertyID = ?";
@@ -119,7 +121,7 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
                     rsFacilities.next();
                     boolean hasBedLinen = rsFacilities.getBoolean("HasBedLinen");
                     boolean hasTowels = rsFacilities.getBoolean("HasBedLinen");
-                    facilitiesList.add(new SleepingFacility(hasBedLinen, hasTowels, bedroomsList));
+                    facilitiesMap.put("Sleeping Facility", new SleepingFacility(hasBedLinen, hasTowels, bedroomsList));
 
                     ArrayList<Bathroom> bathroomsList = new ArrayList<>();
                     query = "SELECT * FROM Bathrooms WHERE PropertyID = ?";
@@ -144,7 +146,7 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
                     boolean hasHairDryer = rsFacilities.getBoolean("HasHairDryer");
                     boolean hasShampoo = rsFacilities.getBoolean("HasShampoo");
                     boolean hasToiletPaper = rsFacilities.getBoolean("HasToiletPaper");
-                    facilitiesList.add(new BathingFacility(hasHairDryer, hasShampoo, hasToiletPaper, bathroomsList));
+                    facilitiesMap.put("Bathing Facility", new BathingFacility(hasHairDryer, hasShampoo, hasToiletPaper, bathroomsList));
 
                     query = "SELECT * FROM KitchenFacilities WHERE PropertyID = ? LIMIT 1";
                     pstFacilities = con.prepareStatement(query);
@@ -160,7 +162,7 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
                     boolean hasTableware = rsFacilities.getBoolean("HasTableware");
                     boolean hasCookware = rsFacilities.getBoolean("HasCookware");
                     boolean hasBasicProvisions = rsFacilities.getBoolean("HasBasicProvisions");
-                    facilitiesList.add(new KitchenFacility(hasRefrigerator, hasMicrowave, hasOven, hasStove,
+                    facilitiesMap.put("Kitchen Facility", new KitchenFacility(hasRefrigerator, hasMicrowave, hasOven, hasStove,
                             hasDishwasher, hasTableware, hasCookware, hasBasicProvisions));
 
                     query = "SELECT * FROM LivingFacilities WHERE PropertyID = ? LIMIT 1";
@@ -175,8 +177,8 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
                     boolean hasStreaming = rsFacilities.getBoolean("HasStreaming");
                     boolean hasDvdPlayer = rsFacilities.getBoolean("HasDvdPlayer");
                     boolean hasBoardGames = rsFacilities.getBoolean("HasBoardGames");
-                    facilitiesList.add(new LivingFacility(hasWifi, hasTelevision, hasSatellite, hasStreaming,
-                            hasDvdPlayer, hasBoardGames));
+                    facilitiesMap.put("Living Facility", new LivingFacility(hasWifi, hasTelevision, hasSatellite,
+                            hasStreaming, hasDvdPlayer, hasBoardGames));
 
                     query = "SELECT * FROM UtilityFacilities WHERE PropertyID = ? LIMIT 1";
                     pstFacilities = con.prepareStatement(query);
@@ -190,7 +192,7 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
                     boolean hasFireExtinguisher = rsFacilities.getBoolean("HasFireExtinguisher");
                     boolean hasSmokeAlarm = rsFacilities.getBoolean("HasSmokeAlarm");
                     boolean hasFirstAidKit = rsFacilities.getBoolean("HasFirstAidKit");
-                    facilitiesList.add(new UtilityFacility(hasHeating, hasWashingMachine, hasDryingMachine,
+                    facilitiesMap.put("Utility Facility", new UtilityFacility(hasHeating, hasWashingMachine, hasDryingMachine,
                             hasFireExtinguisher, hasSmokeAlarm, hasFirstAidKit));
 
                     query = "SELECT * FROM OutdoorFacilities WHERE PropertyID = ? LIMIT 1";
@@ -204,21 +206,22 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
                     boolean hasPaidCarPark = rsFacilities.getBoolean("HasPaidCarPark");
                     boolean hasPatio = rsFacilities.getBoolean("HasPatio");
                     boolean hasBarbecue = rsFacilities.getBoolean("HasBarbecue");
-                    facilitiesList.add(new OutdoorFacility(hasFreeOnsiteParking, hasOnRoadParking, hasPaidCarPark,
-                            hasPatio, hasBarbecue));
+                    facilitiesMap.put("Outdoor Facility", new OutdoorFacility(hasFreeOnsiteParking, hasOnRoadParking,
+                            hasPaidCarPark, hasPatio, hasBarbecue));
 
                     Property property = new Property(propertyID, propertyName, propertyDescription, offerBreakfast,
-                            host, address, chargeBandsList, facilitiesList);
+                            host, address, chargeBandsList, facilitiesMap);
                     filteredProperties.add(property);
                 }
 
+                this.remove(filteredPropertiesPanel);
                 filteredPropertiesPanel = new JPanel();
-                add(filteredPropertiesPanel);
                 filteredPropertiesPanel.setLayout(new BoxLayout(filteredPropertiesPanel, BoxLayout.Y_AXIS));
-
                 for (Property p : filteredProperties) {
                     filteredPropertiesPanel.add(newPropertyBookmark(p));
                 }
+                add(filteredPropertiesPanel);
+
                 revalidate();
                 repaint();
             } catch (Exception ex) {
@@ -250,27 +253,39 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
         gbc.gridy = 4;
         JButton moreDetailsButton = new JButton("More Details");
         moreDetailsButton.addActionListener(e -> {
-            // TODO display further details of host (public info) and facilities
             JFrame moreDetailsFrame = new JFrame("More Details");
-            moreDetailsFrame.setLayout(new BoxLayout(moreDetailsFrame, BoxLayout.Y_AXIS));
+            moreDetailsFrame.setLayout(new BoxLayout(moreDetailsFrame.getContentPane(), BoxLayout.Y_AXIS));
             moreDetailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            moreDetailsFrame.setSize(840, 420);
+
+            // TODO display public host information in more details frame
             JPanel hostDetailsPanel = new JPanel();
+            moreDetailsFrame.add(hostDetailsPanel);
 
+            JPanel facilityDetailsPanel = new JPanel();
+            facilityDetailsPanel.setLayout(new BoxLayout(facilityDetailsPanel, BoxLayout.Y_AXIS));
 
-            JLayeredPane mdFrameLayeredPane = moreDetailsFrame.getLayeredPane();
-            JButton previousFacility = new JButton("<");
-            JButton nextFacility = new JButton(">");
+            String[] facilityNames = property.getFacilitiesMap().keySet().toArray(new String[property.getFacilitiesMap().size()]);
+            for (int i=0; i<facilityNames.length; i++) {
+                LinkedHashMap<String, Boolean> facilityMap = property.getFacilitiesMap().get(facilityNames[i]).getFacilityMap();
+                String[] columnLabels = facilityMap.keySet().toArray(new String[facilityMap.size()]);
 
-            CardLayout cardLayout = new CardLayout();
-            JPanel facilitiesCardPanel = new JPanel(cardLayout);
-            mdFrameLayeredPane.add(facilitiesCardPanel, new Integer(2));
-            mdFrameLayeredPane.add(previousFacility, new Integer(1));
-            mdFrameLayeredPane.add(nextFacility, new Integer(1));
+                String[] rowData = new String[columnLabels.length];
+                for (int j=0; j<columnLabels.length; j++) {
+                    if (facilityMap.get(columnLabels[j])) {
+                        rowData[j] = "yes";
+                    } else {
+                        rowData[j] = "no";
+                    }
+                }
 
+                String[][] tableData = {rowData};
+                JTable facilityTable = new JTable(tableData, columnLabels);
+                facilityDetailsPanel.add(new JLabel(facilityNames[i]));
+                facilityDetailsPanel.add(new JScrollPane(facilityTable));
+            }
 
-
-
-            moreDetailsFrame.add(moreDetailsPanel);
+            moreDetailsFrame.add(facilityDetailsPanel);
             moreDetailsFrame.setVisible(true);
         });
         propertyBookmarkPanel.add(moreDetailsButton,gbc);

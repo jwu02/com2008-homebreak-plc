@@ -3,6 +3,7 @@ package models;
 import models.facilities.Facility;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class Property {
     private int propertyID;
@@ -12,12 +13,12 @@ public class Property {
     private User host;
     private Address location;
     private ArrayList<ChargeBand> chargeBands;
-    private ArrayList<Facility> facilities; // use map instead?
+    private LinkedHashMap<String,Facility> facilitiesMap;
     //private ArrayList<Booking> bookings;
     //private ArrayList<Review> reviews;
 
     public Property(int propertyID, String name, String description, Boolean offerBreakfast, User host,
-                    Address location, ArrayList<ChargeBand> chargeBands, ArrayList<Facility> facilities) {
+                    Address location, ArrayList<ChargeBand> chargeBands, LinkedHashMap<String,Facility> facilitiesMap) {
         this.propertyID = propertyID;
         this.name = name;
         this.description = description;
@@ -25,7 +26,7 @@ public class Property {
         this.host = host;
         this.location = location;
         this.chargeBands = chargeBands;
-        this.facilities = facilities;
+        this.facilitiesMap = facilitiesMap;
     }
 
     public int getPropertyID() {
@@ -56,7 +57,7 @@ public class Property {
         return chargeBands;
     }
 
-    public ArrayList<Facility> getFacilities() {
-        return facilities;
+    public LinkedHashMap<String,Facility> getFacilitiesMap() {
+        return facilitiesMap;
     }
 }
