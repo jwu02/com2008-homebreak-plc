@@ -1,6 +1,6 @@
 package models.facilities;
 
-import javax.swing.*;
+import java.util.LinkedHashMap;
 
 public class UtilityFacility extends Facility {
     private boolean hasHeating;
@@ -10,7 +10,10 @@ public class UtilityFacility extends Facility {
     private boolean hasSmokeAlarm;
     private boolean hasFirstAidKit;
 
-    public UtilityFacility(boolean hasHeating, boolean hasWashingMachine, boolean hasDryingMachine, boolean hasFireExtinguisher, boolean hasSmokeAlarm, boolean hasFirstAidKit) {
+    private LinkedHashMap<String, Boolean> utilityFacilityMap = new LinkedHashMap<>();
+
+    public UtilityFacility(boolean hasHeating, boolean hasWashingMachine, boolean hasDryingMachine,
+                           boolean hasFireExtinguisher, boolean hasSmokeAlarm, boolean hasFirstAidKit) {
         this.hasHeating = hasHeating;
         this.hasWashingMachine = hasWashingMachine;
         this.hasDryingMachine = hasDryingMachine;
@@ -41,5 +44,16 @@ public class UtilityFacility extends Facility {
 
     public boolean hasFirstAidKit() {
         return hasFirstAidKit;
+    }
+
+    public LinkedHashMap<String, Boolean> getFacilityMap() {
+        utilityFacilityMap.put("hasHeating", hasHeating);
+        utilityFacilityMap.put("hasWashingMachine", hasWashingMachine);
+        utilityFacilityMap.put("hasDryingMachine", hasDryingMachine);
+        utilityFacilityMap.put("hasFireExtinguisher", hasFireExtinguisher);
+        utilityFacilityMap.put("hasSmokeAlarm", hasSmokeAlarm);
+        utilityFacilityMap.put("hasFirstAidKit", hasFirstAidKit);
+
+        return utilityFacilityMap;
     }
 }

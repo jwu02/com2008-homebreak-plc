@@ -1,5 +1,7 @@
 package models.facilities;
 
+import java.util.LinkedHashMap;
+
 public class LivingFacility extends Facility {
     private boolean hasWifi;
     private boolean hasTelevision;
@@ -8,7 +10,10 @@ public class LivingFacility extends Facility {
     private boolean hasDvdPlayer;
     private boolean hasBoardGames;
 
-    public LivingFacility(boolean hasWifi, boolean hasTelevision, boolean hasSatellite, boolean hasStreaming, boolean hasDvdPlayer, boolean hasBoardGames) {
+    private LinkedHashMap<String, Boolean> livingFacilityMap = new LinkedHashMap<>();
+
+    public LivingFacility(boolean hasWifi, boolean hasTelevision, boolean hasSatellite, boolean hasStreaming,
+                          boolean hasDvdPlayer, boolean hasBoardGames) {
         this.hasWifi = hasWifi;
         this.hasTelevision = hasTelevision;
         this.hasSatellite = hasSatellite;
@@ -39,5 +44,16 @@ public class LivingFacility extends Facility {
 
     public boolean hasBoardGames() {
         return hasBoardGames;
+    }
+
+    public LinkedHashMap<String, Boolean> getFacilityMap() {
+        livingFacilityMap.put("hasWifi", hasWifi);
+        livingFacilityMap.put("hasTelevision", hasTelevision);
+        livingFacilityMap.put("hasSatellite", hasSatellite);
+        livingFacilityMap.put("hasStreaming", hasStreaming);
+        livingFacilityMap.put("hasDvdPlayer", hasDvdPlayer);
+        livingFacilityMap.put("hasBoardGames", hasBoardGames);
+
+        return livingFacilityMap;
     }
 }
