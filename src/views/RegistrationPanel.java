@@ -16,6 +16,7 @@ public class RegistrationPanel extends JPanel {
     private JTextField password = new JPasswordField(20);
     private JTextField mobile = new JTextField(20);
 
+    private ButtonGroup roleButtonGroup = new ButtonGroup();
     private JRadioButton hostRadioButton = new JRadioButton("Host");
     private JRadioButton guestRadioButton = new JRadioButton("Guest");
 
@@ -69,7 +70,6 @@ public class RegistrationPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 6;
         userDetailsPanel.add(new JLabel("Register as"),gbc);
-        ButtonGroup roleButtonGroup = new ButtonGroup();
         roleButtonGroup.add(hostRadioButton);
         roleButtonGroup.add(guestRadioButton);
         gbc.gridx = 1;
@@ -121,6 +121,7 @@ public class RegistrationPanel extends JPanel {
             } else {
                 try {
                     register();
+                    clearRegistrationFields();
                     JOptionPane.showMessageDialog(this,"Successfully registered.");
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Error registering user.",
@@ -168,5 +169,18 @@ public class RegistrationPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, message, "Registration", JOptionPane.WARNING_MESSAGE);
             }
         }
+    }
+
+    public void clearRegistrationFields() {
+        forename.setText("");
+        surname.setText("");
+        email.setText("");
+        password.setText("");
+        mobile.setText("");
+        roleButtonGroup.clearSelection();
+        house.setText("");
+        street.setText("");
+        place.setText("");
+        postcode.setText("");
     }
 }

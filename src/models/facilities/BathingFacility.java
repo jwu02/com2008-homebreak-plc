@@ -41,17 +41,4 @@ public class BathingFacility extends Facility {
 
         return bathingFacilityMap;
     }
-
-    public String[] getBooleans() {
-        boolean[] booleans = {hasHairDryer, hasShampoo, hasToiletPaper};
-        String[] booleansToStrings = new String[booleans.length];
-        for (int i=0; i<booleans.length; i++) {
-            if (booleans[i]) {
-                booleansToStrings[i] = "yes";
-            } else {
-                booleansToStrings[i] = "no";
-            }
-        }
-        return booleansToStrings;
-    }
 }

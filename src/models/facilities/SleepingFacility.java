@@ -34,17 +34,4 @@ public class SleepingFacility extends Facility {
 
         return sleepingFacilityMap;
     }
-
-    public String[] getBooleans() {
-        boolean[] booleans = {hasBedLinen, hasTowels};
-        String[] booleansToStrings = new String[booleans.length];
-        for (int i=0; i<booleans.length; i++) {
-            if (booleans[i]) {
-                booleansToStrings[i] = "yes";
-            } else {
-                booleansToStrings[i] = "no";
-            }
-        }
-        return booleansToStrings;
-    }
 }

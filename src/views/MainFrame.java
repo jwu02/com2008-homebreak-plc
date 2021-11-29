@@ -28,11 +28,14 @@ public class MainFrame extends JFrame {
             tabs.addTab("Register", new RegistrationPanel());
         } else {
             tabs.addTab("Home", new HomePanel());
-            tabs.addTab("Search Property", new SearchPropertyPanel());
+            if (loggedInUser.getRole().equals("guest")) {
+                tabs.addTab("Search Property", new SearchPropertyPanel());
+            }
+
             if (loggedInUser.getRole().equals("host")) {
                 tabs.addTab("Create Property", new CreatePropertyPanel());
             }
-            tabs.addTab("Settings", new SettingsPanel());
+            tabs.addTab("Settings", new SettingsPanel(this));
         }
         add(tabs);
 

@@ -73,11 +73,11 @@ public class LoginPanel extends JPanel {
 
             ResultSet resultSet = pst.executeQuery();
 
+            // if no records are returned
             if (!resultSet.isBeforeFirst()) {
-                System.out.println("Invalid credentials");
+                JOptionPane.showMessageDialog(this, "Incorrect credentials.",
+                        "Login", JOptionPane.WARNING_MESSAGE);
             } else {
-                System.out.println("You have successfully logged in!");
-
                 resultSet.next();
                 int userID = resultSet.getInt("UserID");
                 String forename = resultSet.getString("Forename");
