@@ -8,7 +8,7 @@ import java.awt.*;
 public class MainFrame extends JFrame {
     public static User loggedInUser;
 
-    private JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
+    private JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
 
     public MainFrame(String title, User loggedInUser) {
         super(title);
@@ -23,23 +23,23 @@ public class MainFrame extends JFrame {
 
         // 0 means null userID, i.e. user not logged in
         if (loggedInUser.getUserID() == 0) {
-            tabs.addTab("Search Property", new SearchPropertyPanel());
-            tabs.addTab("Login", new LoginPanel(this));
-            tabs.addTab("Register", new RegistrationPanel());
+            tabbedPane.addTab("Search Property", new SearchPropertyPanel(this));
+            tabbedPane.addTab("Login", new LoginPanel(this));
+            tabbedPane.addTab("Register", new RegistrationPanel());
         } else {
-            tabs.addTab("Home", new HomePanel());
+            tabbedPane.addTab("Home", new HomePanel(this));
             if (loggedInUser.getRole().equals("guest")) {
-                tabs.addTab("Search Property", new SearchPropertyPanel());
+                tabbedPane.addTab("Search Property", new SearchPropertyPanel(this));
             }
 
             if (loggedInUser.getRole().equals("host")) {
-                tabs.addTab("Create Property", new CreatePropertyPanel());
+                tabbedPane.addTab("Create Property", new CreatePropertyPanel());
             }
-            tabs.addTab("Settings", new SettingsPanel(this));
+            tabbedPane.addTab("Settings", new SettingsPanel(this));
         }
-        add(tabs);
+        add(tabbedPane);
 
-        JScrollPane scrollPane = new JScrollPane(tabs);
+        JScrollPane scrollPane = new JScrollPane(tabbedPane);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.getVerticalScrollBar().setUnitIncrement(15);
@@ -49,7 +49,7 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        new MainFrame("Homebreak PLC",new User());
+    public JTabbedPane getTabbedPane() {
+        return tabbedPane;
     }
 }
