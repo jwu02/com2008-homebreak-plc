@@ -1,7 +1,9 @@
 package views;
 
 import models.Booking;
+import models.ChargeBand;
 import models.Property;
+import models.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +21,7 @@ import static database.OpenConnection.getConnection;
 public class PropertyBookmarkPanel extends JPanel implements ActionListener {
     private JPanel backReferencePanel;
     private Property property;
+    private User guest;
     private HashMap<Integer, Booking> bookingsMap = new HashMap<>();
 
     public PropertyBookmarkPanel(JPanel backReferencePanel, Property property) {
@@ -113,13 +116,22 @@ public class PropertyBookmarkPanel extends JPanel implements ActionListener {
     }
 
     public BigDecimal calculateTotalServiceCharge() {
+        // TODO calculate total service charge
 
         return new BigDecimal(0);
     }
 
     public BigDecimal calculateTotalCleaningCharge() {
+        // TODO calculate total cleaning charge
 
         return new BigDecimal(0);
+    }
+
+    public BigDecimal calculateTotalCost() {
+        BigDecimal totalCost = property.getPricePerNight().multiply(BigDecimal.valueOf(getNumberOfNights()));
+        totalCost.add(calculateTotalServiceCharge());
+        totalCost.add(calculateTotalCleaningCharge());
+        return totalCost;
     }
 
     public JPanel getBackReferencePanel() {

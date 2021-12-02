@@ -1,5 +1,6 @@
 package views;
 
+import javafx.util.Pair;
 import models.Booking;
 import models.Property;
 
@@ -18,6 +19,7 @@ public class HomePanel extends JPanel {
     private MainFrame mainFrame;
 
     private HashMap<Integer, Booking> bookingsMap = new HashMap<>();
+    private HashMap<Integer[], Booking> bookingsMapTuple = new HashMap<>();
     private ArrayList<Booking> bookingsList = new ArrayList<>();
     private ArrayList<Property> bookedPropertiesList = new ArrayList<>();
 
@@ -81,7 +83,7 @@ public class HomePanel extends JPanel {
 
                 query = "SELECT * FROM Bookings as b, Properties AS p " +
                         "WHERE b.PropertyID = p.PropertyID" +
-                        "  AND p.UserID = ?;";
+                        "  AND p.UserID = ?";
                 pst = con.prepareStatement(query);
                 pst.setInt(1, MainFrame.loggedInUser.getUserID());
                 rs = pst.executeQuery();

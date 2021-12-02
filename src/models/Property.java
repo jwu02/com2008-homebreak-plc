@@ -16,6 +16,7 @@ public class Property {
     private int propertyID;
     private String name;
     private String description;
+    private BigDecimal pricePerNight;
     private Boolean offerBreakfast;
     private User host;
     private Address location;
@@ -24,11 +25,12 @@ public class Property {
     //private ArrayList<Booking> bookings;
     //private ArrayList<Review> reviews;
 
-    public Property(int propertyID, String name, String description, Boolean offerBreakfast, User host,
+    public Property(int propertyID, String name, String description, BigDecimal pricePerNight, Boolean offerBreakfast, User host,
                     Address location, ArrayList<ChargeBand> chargeBands, LinkedHashMap<String,Facility> facilitiesMap) {
         this.propertyID = propertyID;
         this.name = name;
         this.description = description;
+        this.pricePerNight = pricePerNight;
         this.offerBreakfast = offerBreakfast;
         this.host = host;
         this.location = location;
@@ -47,6 +49,8 @@ public class Property {
     public String getDescription() {
         return description;
     }
+
+    public BigDecimal getPricePerNight() {return pricePerNight;}
 
     public Boolean getOfferBreakfast() {
         return offerBreakfast;
@@ -75,6 +79,7 @@ public class Property {
                 int propertyID = rs.getInt("PropertyID");
                 String propertyName = rs.getString("Name");
                 String propertyDescription = rs.getString("Description");
+                BigDecimal pricePerNight = rs.getBigDecimal("PricePerNight");
                 Boolean offerBreakfast = rs.getBoolean("OfferBreakfast");
 
                 int userID = rs.getInt("p.UserID");
@@ -101,10 +106,9 @@ public class Property {
                 while (rsChargeBands.next()) {
                     LocalDate startDate = rsChargeBands.getDate("StartDate").toLocalDate();
                     LocalDate endDate = rsChargeBands.getDate("EndDate").toLocalDate();
-                    BigDecimal pricePerNight = rsChargeBands.getBigDecimal("PricePerNight");
                     BigDecimal serviceCharge = rsChargeBands.getBigDecimal("ServiceCharge");
                     BigDecimal cleaningCharge = rsChargeBands.getBigDecimal("CleaningCharge");
-                    chargeBandsList.add(new ChargeBand(startDate, endDate, pricePerNight, serviceCharge, cleaningCharge));
+                    chargeBandsList.add(new ChargeBand(startDate, endDate, serviceCharge, cleaningCharge));
                 }
 
                 // convert facility information to models
@@ -217,8 +221,8 @@ public class Property {
                 facilitiesMap.put("Outdoor Facility", new OutdoorFacility(hasFreeOnsiteParking, hasOnRoadParking,
                         hasPaidCarPark, hasPatio, hasBarbecue));
 
-                Property property = new Property(propertyID, propertyName, propertyDescription, offerBreakfast,
-                        host, address, chargeBandsList, facilitiesMap);
+                Property property = new Property(propertyID, propertyName, propertyDescription, pricePerNight,
+                        offerBreakfast, host, address, chargeBandsList, facilitiesMap);
                 filteredProperties.add(property);
             }
         } catch (Exception ex) {

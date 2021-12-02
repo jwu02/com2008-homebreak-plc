@@ -1,8 +1,5 @@
 package models;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class User {
     private int userID;
     private String forename;
@@ -49,23 +46,8 @@ public class User {
         return role;
     }
 
-    public void setForename(String forename) {
-        this.forename = forename;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
+    public boolean isSuperHost() {
+        // TODO implement functionality for super host check
+        return false;
+    };
 }
