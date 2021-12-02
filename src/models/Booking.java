@@ -1,5 +1,6 @@
 package models;
 
+import java.time.Duration;
 import java.time.LocalDate;
 
 public class Booking {
@@ -9,11 +10,16 @@ public class Booking {
     private LocalDate endDate;
     private boolean isAccepted;
 
-    public Booking(int propertyID, LocalDate startDate, LocalDate endDate, boolean isAccepted) {
+    public Booking(int userID, int propertyID, LocalDate startDate, LocalDate endDate, boolean isAccepted) {
+        this.userID = userID;
         this.propertyID = propertyID;
         this.startDate = startDate;
         this.endDate = endDate;
         this.isAccepted = isAccepted;
+    }
+
+    public int getUserID() {
+        return userID;
     }
 
     public int getPropertyID() {
@@ -31,4 +37,10 @@ public class Booking {
     public boolean isAccepted() {
         return isAccepted;
     }
+
+    public long getNumberOfNights() {
+        return Duration.between(startDate, endDate).toDays();
+    }
+
+
 }

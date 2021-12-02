@@ -22,6 +22,7 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
     private JPanel filteredPropertiesPanel = new JPanel();
     private ArrayList<Property> filteredProperties = new ArrayList<>();
 
+
     public SearchPropertyPanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
 
@@ -64,6 +65,9 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
             if (requestLocationField.getText().equals("") || requestStartDateField.getText().equals("") ||
                     requestEndDateField.getText().equals("")) {
                 JOptionPane.showMessageDialog(this, "Please fill in all search criterions.");
+            } else if (getRequestedStartDate().isAfter(getRequestedEndDate())) {
+                JOptionPane.showMessageDialog(this, "Please enter a start date before the end date or vice versa.",
+                        "Search property", JOptionPane.WARNING_MESSAGE);
             } else {
                 try (Connection con = getConnection()) {
                     String query = "SELECT * FROM Properties AS p, Users AS u, Addresses AS a " +

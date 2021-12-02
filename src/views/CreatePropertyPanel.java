@@ -145,6 +145,12 @@ public class CreatePropertyPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 3;
         propertyDetailsPanel.add(offerBreakfast,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        propertyDetailsPanel.add(new JLabel("Price per Night"),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        propertyDetailsPanel.add(pricePerNight,gbc);
         confidentialDetailsPanel.add(propertyDetailsPanel);
 
         JPanel addressDetailsPanel = new JPanel(new GridBagLayout());
@@ -182,11 +188,20 @@ public class CreatePropertyPanel extends JPanel {
 
         JButton nextButton1 = new JButton("Next");
         nextButton1.addActionListener(e -> {
-            if (name.getText().equals("") || description.getText().equals("") || house.getText().equals("") ||
-                    street.getText().equals("") || place.getText().equals("") || postcode.getText().equals("")) {
+            if (name.getText().equals("") || description.getText().equals("") || pricePerNight.getText().equals("") ||
+                    house.getText().equals("") || street.getText().equals("") || place.getText().equals("") ||
+                    postcode.getText().equals("")) {
                 JOptionPane.showMessageDialog(this, "Please fill in all fields.",
                         "Property Details", JOptionPane.WARNING_MESSAGE);
             } else {
+                try {
+                    // check if value for the price per night is valid
+                    new BigDecimal(pricePerNight.getText());
+                    cardLayout.next(this);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Please enter a valid price per night",
+                            "Create property", JOptionPane.WARNING_MESSAGE);
+                }
                 cardLayout.next(this);
             }
         });
@@ -217,29 +232,22 @@ public class CreatePropertyPanel extends JPanel {
         chargeBandDetailsInputPanel.add(endDate,gbc);
         gbc.gridx = 0;
         gbc.gridy = 3;
-        chargeBandDetailsInputPanel.add(new JLabel("Price per Night"),gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        chargeBandDetailsInputPanel.add(pricePerNight,gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 4;
         chargeBandDetailsInputPanel.add(new JLabel("Service Charge"),gbc);
         gbc.gridx = 1;
-        gbc.gridy = 4;
+        gbc.gridy = 3;
         chargeBandDetailsInputPanel.add(serviceCharge,gbc);
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 4;
         chargeBandDetailsInputPanel.add(new JLabel("Cleaning Charge"),gbc);
         gbc.gridx = 1;
-        gbc.gridy = 5;
+        gbc.gridy = 4;
         chargeBandDetailsInputPanel.add(cleaningCharge,gbc);
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
         addChargeBandButton.addActionListener(e -> {
             if (startDate.getText().equals("yyyy-mm-dd") || endDate.getText().equals("yyyy-mm-dd") ||
-                    pricePerNight.getText().equals("") || serviceCharge.getText().equals("") ||
-                    cleaningCharge.getText().equals("")) {
+                    serviceCharge.getText().equals("") || cleaningCharge.getText().equals("")) {
                 JOptionPane.showMessageDialog(this, "Please fill in all fields.",
                         "Add Charge Band", JOptionPane.WARNING_MESSAGE);
             } else {
@@ -493,10 +501,9 @@ public class CreatePropertyPanel extends JPanel {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate startDate = LocalDate.parse(this.startDate.getText(), dtf);
             LocalDate endDate = LocalDate.parse(this.endDate.getText(), dtf);
-            BigDecimal pricePerNight = new BigDecimal(this.pricePerNight.getText());
             BigDecimal serviceCharge = new BigDecimal(this.serviceCharge.getText());
             BigDecimal cleaningCharge = new BigDecimal(this.cleaningCharge.getText());
-            ChargeBand newChargeBand = new ChargeBand(startDate,endDate,pricePerNight,serviceCharge,cleaningCharge);
+            ChargeBand newChargeBand = new ChargeBand(startDate,endDate,serviceCharge,cleaningCharge);
             chargeBandsList.add(newChargeBand);
             JOptionPane.showMessageDialog(this,"Added charge band.");
 
@@ -526,21 +533,15 @@ public class CreatePropertyPanel extends JPanel {
         chargeBandDetailsPanel.add(new JLabel(endDate.getText()),gbc);
         gbc.gridx = 0;
         gbc.gridy = 2;
-        chargeBandDetailsPanel.add(new JLabel("Price per Night"),gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        chargeBandDetailsPanel.add(new JLabel(pricePerNight.getText()),gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 3;
         chargeBandDetailsPanel.add(new JLabel("Service Charge"),gbc);
         gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridy = 2;
         chargeBandDetailsPanel.add(new JLabel(serviceCharge.getText()),gbc);
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 3;
         chargeBandDetailsPanel.add(new JLabel("Cleaning Charge"),gbc);
         gbc.gridx = 1;
-        gbc.gridy = 4;
+        gbc.gridy = 3;
         chargeBandDetailsPanel.add(new JLabel(cleaningCharge.getText()),gbc);
         addedChargeBandsPanel.add(chargeBandDetailsPanel,0);
         revalidate();
@@ -550,6 +551,7 @@ public class CreatePropertyPanel extends JPanel {
     public void clearPropertyFields() {
         name.setText("");
         description.setText("");
+        pricePerNight.setText("");
         offerBreakfast.setSelected(false);
         house.setText("");
         street.setText("");
@@ -563,7 +565,6 @@ public class CreatePropertyPanel extends JPanel {
     public void clearChargeBandFields() {
         startDate.setText("yyyy-mm-dd");
         endDate.setText("yyyy-mm-dd");
-        pricePerNight.setText("");
         serviceCharge.setText("");
         cleaningCharge.setText("");
     };
@@ -587,16 +588,17 @@ public class CreatePropertyPanel extends JPanel {
 
     public void insertProperty() throws SQLException {
         try (Connection con = getConnection()) {
-            String query = "INSERT INTO Properties VALUES (null, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO Properties VALUES (null, ?, ?, ?, ?, ?, ?)";
             PreparedStatement pst = con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 
             pst.clearParameters();
             pst.setString(1,name.getText());
             pst.setString(2,description.getText());
-            pst.setBoolean(3,offerBreakfast.isSelected());
-            pst.setInt(4,MainFrame.loggedInUser.getUserID());
+            pst.setBigDecimal(3,new BigDecimal(pricePerNight.getText()));
+            pst.setBoolean(4,offerBreakfast.isSelected());
+            pst.setInt(5,MainFrame.loggedInUser.getUserID());
             Address addressToInsert = new Address(0,house.getText(),street.getText(),place.getText(),postcode.getText());
-            pst.setInt(5, InsertAddress.insertAddress(addressToInsert));
+            pst.setInt(6, InsertAddress.insertAddress(addressToInsert));
 
             pst.executeUpdate();
 
@@ -612,16 +614,15 @@ public class CreatePropertyPanel extends JPanel {
 
     public void insertChargeBands() throws SQLException {
         try (Connection con = getConnection()) {
-            String query = "INSERT INTO ChargeBands VALUES (null, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO ChargeBands VALUES (null, ?, ?, ?, ?, ?)";
             PreparedStatement pst = con.prepareStatement(query);
             for (ChargeBand cb : chargeBandsList) {
                 pst.clearParameters();
                 pst.setDate(1,Date.valueOf(cb.getStartDate()));
                 pst.setDate(2,Date.valueOf(cb.getEndDate()));
-                pst.setBigDecimal(3,cb.getPricePerNight());
-                pst.setBigDecimal(4,cb.getServiceCharge());
-                pst.setBigDecimal(5,cb.getCleaningCharge());
-                pst.setInt(6,lastInsertedPropertyID);
+                pst.setBigDecimal(3,cb.getServiceCharge());
+                pst.setBigDecimal(4,cb.getCleaningCharge());
+                pst.setInt(5,lastInsertedPropertyID);
                 pst.executeUpdate();
             }
 
