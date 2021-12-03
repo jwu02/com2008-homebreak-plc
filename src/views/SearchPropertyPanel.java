@@ -79,6 +79,7 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
                     pst.setString(1, "%" + requestLocationField.getText() + "%");
                     ResultSet rs = pst.executeQuery();
 
+                    filteredProperties = new ArrayList<>();
                     while (rs.next()) {
                         filteredProperties.add(Property.selectProperty(rs));
                     }

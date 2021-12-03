@@ -23,32 +23,56 @@ public class MorePropertyDetailsFrame extends JFrame {
         Border hostDetailsPanelBorder = BorderFactory.createTitledBorder("Host Details");
         hostDetailsPanel.setBorder(hostDetailsPanelBorder);
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        hostDetailsPanel.add(new JLabel("Host name: "), gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        hostDetailsPanel.add(new JLabel(property.getHost().getForename()), gbc);
-        if (this.backReferencePanel.getBackReferencePanel() instanceof HomePanel && this.backReferencePanel.isBookingAccepted()) {
+        if (MainFrame.loggedInUser.getRole().equals("guest")) {
             gbc.gridx = 0;
-            gbc.gridy = 1;
-            hostDetailsPanel.add(new JLabel("Email: "), gbc);
+            gbc.gridy = 0;
+            hostDetailsPanel.add(new JLabel("Host name: "), gbc);
             gbc.gridx = 1;
-            gbc.gridy = 1;
-            hostDetailsPanel.add(new JLabel(property.getHost().getEmail()), gbc);
+            gbc.gridy = 0;
+            hostDetailsPanel.add(new JLabel(property.getHost().getForename()), gbc);
+            if (this.backReferencePanel.getBackReferencePanel() instanceof HomePanel && this.backReferencePanel.isBookingAccepted()) {
+                gbc.gridx = 0;
+                gbc.gridy = 1;
+                hostDetailsPanel.add(new JLabel("Email: "), gbc);
+                gbc.gridx = 1;
+                gbc.gridy = 1;
+                hostDetailsPanel.add(new JLabel(property.getHost().getEmail()), gbc);
+                gbc.gridx = 0;
+                gbc.gridy = 2;
+                hostDetailsPanel.add(new JLabel("Mobile: "),gbc);
+                gbc.gridx = 1;
+                gbc.gridy = 2;
+                hostDetailsPanel.add(new JLabel(property.getHost().getMobile()),gbc);
+            }
             gbc.gridx = 0;
-            gbc.gridy = 2;
-            hostDetailsPanel.add(new JLabel("Mobile: "),gbc);
+            gbc.gridy = 3;
+            hostDetailsPanel.add(new JLabel("Is super host: "), gbc);
             gbc.gridx = 1;
-            gbc.gridy = 2;
-            hostDetailsPanel.add(new JLabel(property.getHost().getMobile()),gbc);
+            gbc.gridy = 3;
+            hostDetailsPanel.add(new JLabel(property.getHost().isSuperHost() ? "Yes" : "No"), gbc);
+        } else if (MainFrame.loggedInUser.getRole().equals("host")) {
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            hostDetailsPanel.add(new JLabel("Guest name: "), gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 0;
+            hostDetailsPanel.add(new JLabel(this.backReferencePanel.getGuest().getForename()), gbc);
+            if (this.backReferencePanel.getBackReferencePanel() instanceof HomePanel && this.backReferencePanel.isBookingAccepted()) {
+                gbc.gridx = 0;
+                gbc.gridy = 1;
+                hostDetailsPanel.add(new JLabel("Email: "), gbc);
+                gbc.gridx = 1;
+                gbc.gridy = 1;
+                hostDetailsPanel.add(new JLabel(this.backReferencePanel.getGuest().getEmail()), gbc);
+                gbc.gridx = 0;
+                gbc.gridy = 2;
+                hostDetailsPanel.add(new JLabel("Mobile: "),gbc);
+                gbc.gridx = 1;
+                gbc.gridy = 2;
+                hostDetailsPanel.add(new JLabel(this.backReferencePanel.getGuest().getMobile()),gbc);
+            }
         }
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        hostDetailsPanel.add(new JLabel("Is super host: "), gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        hostDetailsPanel.add(new JLabel(property.getHost().isSuperHost() ? "Yes" : "No"), gbc);
+
         add(hostDetailsPanel);
 
         JPanel propertyDetailsPanel = new JPanel(new GridBagLayout());
@@ -75,34 +99,35 @@ public class MorePropertyDetailsFrame extends JFrame {
         costDetailsPanel.add(new JLabel("Number of nights: "),gbc);
         gbc.gridx = 1;
         gbc.gridy = 0;
-        costDetailsPanel.add(new JLabel(String.valueOf(((PropertyBookmarkPanel) backReferencePanel).getNumberOfNights())),gbc);
+        costDetailsPanel.add(new JLabel("£"+((PropertyBookmarkPanel) backReferencePanel).getNumberOfNights()),gbc);
         gbc.gridx = 0;
         gbc.gridy = 1;
         costDetailsPanel.add(new JLabel("Price per night: "),gbc);
         gbc.gridx = 1;
         gbc.gridy = 1;
-        costDetailsPanel.add(new JLabel(String.valueOf(property.getPricePerNight())),gbc);
+        costDetailsPanel.add(new JLabel("£"+property.getPricePerNight()),gbc);
         gbc.gridx = 0;
         gbc.gridy = 2;
         costDetailsPanel.add(new JLabel("Total service charge: "),gbc);
         gbc.gridx = 1;
         gbc.gridy = 2;
-        costDetailsPanel.add(new JLabel(),gbc);
+        costDetailsPanel.add(new JLabel("£"+((PropertyBookmarkPanel) backReferencePanel).calculateTotalServiceCharge()),gbc);
         gbc.gridx = 0;
         gbc.gridy = 3;
         costDetailsPanel.add(new JLabel("Total cleaning charge: "),gbc);
         gbc.gridx = 1;
         gbc.gridy = 3;
-        costDetailsPanel.add(new JLabel(),gbc);
+        costDetailsPanel.add(new JLabel("£"+((PropertyBookmarkPanel) backReferencePanel).calculateTotalCleaningCharge()),gbc);
         gbc.gridx = 0;
         gbc.gridy = 4;
         costDetailsPanel.add(new JLabel("Total charge: "),gbc);
         gbc.gridx = 1;
         gbc.gridy = 4;
-        costDetailsPanel.add(new JLabel(),gbc);
+        costDetailsPanel.add(new JLabel("£"+((PropertyBookmarkPanel) backReferencePanel).calculateTotalCost()),gbc);
         add(costDetailsPanel);
 
-        if (this.backReferencePanel.getBackReferencePanel() instanceof HomePanel && this.backReferencePanel.isBookingAccepted()) {
+        if (MainFrame.loggedInUser.getRole().equals("host") && this.backReferencePanel.getBackReferencePanel() instanceof HomePanel &&
+                this.backReferencePanel.isBookingAccepted()) {
             JPanel addressDetailsPanel = new JPanel(new GridBagLayout());
             Border addressDetailsPanelBorder = BorderFactory.createTitledBorder("Address Details");
             addressDetailsPanel.setBorder(addressDetailsPanelBorder);

@@ -113,26 +113,86 @@ public class PropertyBookmarkPanel extends JPanel implements ActionListener {
     }
 
     public BigDecimal calculateTotalServiceCharge() {
-        // TODO calculate total service charge
+        BigDecimal totalServiceCharge = new BigDecimal(0);
+        long overlappingDays;
 
-        return new BigDecimal(0);
+        if (backReferencePanel instanceof SearchPropertyPanel) {
+            LocalDate requestedStartDate = ((SearchPropertyPanel) backReferencePanel).getRequestedStartDate();
+            LocalDate requestedEndDate = ((SearchPropertyPanel) backReferencePanel).getRequestedEndDate();
+
+            for (ChargeBand cb : property.getChargeBands()) {
+                if ((requestedStartDate.isBefore(cb.getEndDate()) || requestedStartDate.isEqual(cb.getEndDate())) &&
+                        (requestedEndDate.isAfter(cb.getStartDate()) || requestedEndDate.isEqual(cb.getStartDate()))) {
+                    LocalDate maxStartDate =  requestedStartDate.isAfter(cb.getStartDate()) ? requestedStartDate : cb.getStartDate();
+                    LocalDate minEndDate = requestedEndDate.isAfter(cb.getEndDate()) ? cb.getEndDate() : requestedEndDate;
+                    overlappingDays = Duration.between(maxStartDate.atStartOfDay(), minEndDate.atStartOfDay()).toDays();
+
+                    totalServiceCharge = totalServiceCharge.add(cb.getServiceCharge().multiply(BigDecimal.valueOf(Math.abs(overlappingDays))));
+                }
+            }
+        } else if (backReferencePanel instanceof HomePanel) {
+            for (ChargeBand cb : property.getChargeBands()) {
+                //System.out.println(property.getChargeBands().size());
+                if ((booking.getStartDate().isBefore(cb.getEndDate()) || booking.getStartDate().isEqual(cb.getEndDate())) &&
+                        (booking.getEndDate().isAfter(cb.getStartDate()) || booking.getEndDate().isEqual(cb.getStartDate()))) {
+                    LocalDate maxStartDate =  booking.getStartDate().isAfter(cb.getStartDate()) ? booking.getStartDate() : cb.getStartDate();
+                    LocalDate minEndDate = booking.getEndDate().isAfter(cb.getEndDate()) ? cb.getEndDate() : booking.getEndDate();
+                    overlappingDays = Duration.between(maxStartDate.atStartOfDay(), minEndDate.atStartOfDay()).toDays();
+
+                    totalServiceCharge = totalServiceCharge.add(cb.getServiceCharge().multiply(BigDecimal.valueOf(Math.abs(overlappingDays))));
+                }
+            }
+        }
+
+        return totalServiceCharge;
     }
 
     public BigDecimal calculateTotalCleaningCharge() {
-        // TODO calculate total cleaning charge
+        BigDecimal totalCleaningCharge = new BigDecimal(0);
+        long overlappingDays;
 
-        return new BigDecimal(0);
+        if (backReferencePanel instanceof SearchPropertyPanel) {
+            LocalDate requestedStartDate = ((SearchPropertyPanel) backReferencePanel).getRequestedStartDate();
+            LocalDate requestedEndDate = ((SearchPropertyPanel) backReferencePanel).getRequestedEndDate();
+
+            for (ChargeBand cb : property.getChargeBands()) {
+                if ((requestedStartDate.isBefore(cb.getEndDate()) || requestedStartDate.isEqual(cb.getEndDate())) &&
+                        (requestedEndDate.isAfter(cb.getStartDate()) || requestedEndDate.isEqual(cb.getStartDate()))) {
+                    LocalDate maxStartDate =  requestedStartDate.isAfter(cb.getStartDate()) ? requestedStartDate : cb.getStartDate();
+                    LocalDate minEndDate = requestedEndDate.isAfter(cb.getEndDate()) ? cb.getEndDate() : requestedEndDate;
+                    overlappingDays = Duration.between(maxStartDate.atStartOfDay(), minEndDate.atStartOfDay()).toDays();
+
+                    totalCleaningCharge = totalCleaningCharge.add(cb.getCleaningCharge().multiply(BigDecimal.valueOf(Math.abs(overlappingDays))));
+                }
+            }
+        } else if (backReferencePanel instanceof HomePanel) {
+            for (ChargeBand cb : property.getChargeBands()) {
+                if ((booking.getStartDate().isBefore(cb.getEndDate()) || booking.getStartDate().isEqual(cb.getEndDate())) &&
+                        (booking.getEndDate().isAfter(cb.getStartDate()) || booking.getEndDate().isEqual(cb.getStartDate()))) {
+                    LocalDate maxStartDate =  booking.getStartDate().isAfter(cb.getStartDate()) ? booking.getStartDate() : cb.getStartDate();
+                    LocalDate minEndDate = booking.getEndDate().isAfter(cb.getEndDate()) ? cb.getEndDate() : booking.getEndDate();
+                    overlappingDays = Duration.between(maxStartDate.atStartOfDay(), minEndDate.atStartOfDay()).toDays();
+
+                    totalCleaningCharge = totalCleaningCharge.add(cb.getCleaningCharge().multiply(BigDecimal.valueOf(Math.abs(overlappingDays))));
+                }
+            }
+        }
+
+        return totalCleaningCharge;
     }
 
     public BigDecimal calculateTotalCost() {
         BigDecimal totalCost = property.getPricePerNight().multiply(BigDecimal.valueOf(getNumberOfNights()));
-        totalCost.add(calculateTotalServiceCharge());
-        totalCost.add(calculateTotalCleaningCharge());
+        totalCost = totalCost.add(calculateTotalServiceCharge());
+        totalCost = totalCost.add(calculateTotalCleaningCharge());
         return totalCost;
     }
 
     public JPanel getBackReferencePanel() {
         return backReferencePanel;
+    }
+    public User getGuest() {
+        return guest;
     }
 
     public boolean isAvailableWithinRequestedPeriod() {
