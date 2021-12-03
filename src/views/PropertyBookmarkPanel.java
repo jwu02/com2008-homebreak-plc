@@ -13,8 +13,6 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import static database.OpenConnection.getConnection;
 
@@ -22,11 +20,20 @@ public class PropertyBookmarkPanel extends JPanel implements ActionListener {
     private JPanel backReferencePanel;
     private Property property;
     private User guest;
-    private HashMap<Integer, Booking> bookingsMap = new HashMap<>();
+    private Booking booking;
 
     public PropertyBookmarkPanel(JPanel backReferencePanel, Property property) {
         this.backReferencePanel = backReferencePanel;
         this.property = property;
+
+        if (backReferencePanel instanceof HomePanel) {
+            this.booking = HomePanel.booking;
+            if (MainFrame.loggedInUser.getRole().equals("host")) {
+                this.guest = HomePanel.guest;
+            } else {
+                this.guest = MainFrame.loggedInUser;
+            }
+        }
 
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -44,20 +51,19 @@ public class PropertyBookmarkPanel extends JPanel implements ActionListener {
                     " to " + ((SearchPropertyPanel) backReferencePanel).getRequestedEndDate();
             add(new JLabel(availabilityLabel),gbc);
         } else if (backReferencePanel instanceof HomePanel) {
-            bookingsMap = ((HomePanel) backReferencePanel).getBookingsMap();
             add(new JLabel(isBookingAccepted() ? "Booking accepted!" : "Booking awaiting acceptance from host."),gbc);
             gbc.gridx = 0;
             gbc.gridy = 3;
             add(new JLabel("Start date"),gbc);
             gbc.gridx = 1;
             gbc.gridy = 3;
-            add(new JLabel(String.valueOf(bookingsMap.get(property.getPropertyID()).getStartDate())),gbc);
+            add(new JLabel(String.valueOf(booking.getStartDate())),gbc);
             gbc.gridx = 0;
             gbc.gridy = 4;
             add(new JLabel("End date"),gbc);
             gbc.gridx = 1;
             gbc.gridy = 4;
-            add(new JLabel(String.valueOf(bookingsMap.get(property.getPropertyID()).getEndDate())),gbc);
+            add(new JLabel(String.valueOf(booking.getEndDate())),gbc);
         }
 
         gbc.gridx = 0;
@@ -74,7 +80,7 @@ public class PropertyBookmarkPanel extends JPanel implements ActionListener {
                 bookButton.addActionListener(this);
                 add(bookButton, gbc);
             } else if (backReferencePanel instanceof HomePanel) {
-                if (MainFrame.loggedInUser.getRole().equals("host") && !isBookingAcceptedHostView()) {
+                if (MainFrame.loggedInUser.getRole().equals("host") && !isBookingAccepted()) {
                     JButton acceptBookingButton = new JButton("Accept");
                     acceptBookingButton.addActionListener(this);
                     add(acceptBookingButton, gbc);
@@ -89,16 +95,7 @@ public class PropertyBookmarkPanel extends JPanel implements ActionListener {
     }
 
     public boolean isBookingAccepted() {
-        return bookingsMap.get(property.getPropertyID()).isAccepted();
-    }
-
-    public boolean isBookingAcceptedHostView() {
-        for (Booking b : ((HomePanel) backReferencePanel).getBookingsList()) {
-            if (b.equals(bookingsMap.get(property.getPropertyID()))) {
-                return bookingsMap.get(property.getPropertyID()).isAccepted();
-            }
-        }
-        return false;
+        return booking.isAccepted();
     }
 
     public long getNumberOfNights() {
@@ -107,8 +104,8 @@ public class PropertyBookmarkPanel extends JPanel implements ActionListener {
             LocalDate requestedEndDate = ((SearchPropertyPanel) backReferencePanel).getRequestedEndDate();
             return Duration.between(requestedStartDate.atStartOfDay(), requestedEndDate.atStartOfDay()).toDays();
         } else if (backReferencePanel instanceof HomePanel) {
-            LocalDate requestedStartDate = bookingsMap.get(property.getPropertyID()).getStartDate();
-            LocalDate requestedEndDate = bookingsMap.get(property.getPropertyID()).getEndDate();
+            LocalDate requestedStartDate = booking.getStartDate();
+            LocalDate requestedEndDate = booking.getEndDate();
             return Duration.between(requestedStartDate.atStartOfDay(), requestedEndDate.atStartOfDay()).toDays();
         } else {
             return 0;
@@ -219,7 +216,11 @@ public class PropertyBookmarkPanel extends JPanel implements ActionListener {
             try (Connection con = getConnection()) {
                 String query = "DELETE FROM Bookings WHERE UserID = ? AND PropertyID = ?";
                 PreparedStatement pst = con.prepareStatement(query);
-                pst.setInt(1, MainFrame.loggedInUser.getUserID());
+                if (MainFrame.loggedInUser.getRole().equals("guest")) {
+                    pst.setInt(1, MainFrame.loggedInUser.getUserID());
+                } else {
+                    pst.setInt(1, guest.getUserID());
+                }
                 pst.setInt(2, property.getPropertyID());
 
                 pst.executeUpdate();
@@ -235,7 +236,7 @@ public class PropertyBookmarkPanel extends JPanel implements ActionListener {
                 String query = "UPDATE Bookings SET IsAccepted = ? WHERE UserID = ? AND PropertyID = ?";
                 PreparedStatement pst = con.prepareStatement(query);
                 pst.setBoolean(1, true);
-                pst.setInt(2, bookingsMap.get(property.getPropertyID()).getUserID());
+                pst.setInt(2, booking.getUserID());
                 pst.setInt(3, property.getPropertyID());
 
                 pst.executeUpdate();

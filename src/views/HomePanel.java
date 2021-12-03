@@ -1,8 +1,8 @@
 package views;
 
-import javafx.util.Pair;
 import models.Booking;
 import models.Property;
+import models.User;
 
 import javax.swing.*;
 
@@ -11,17 +11,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static database.OpenConnection.getConnection;
 
 public class HomePanel extends JPanel {
     private MainFrame mainFrame;
 
-    private HashMap<Integer, Booking> bookingsMap = new HashMap<>();
-    private HashMap<Integer[], Booking> bookingsMapTuple = new HashMap<>();
     private ArrayList<Booking> bookingsList = new ArrayList<>();
     private ArrayList<Property> bookedPropertiesList = new ArrayList<>();
+    public static User guest;
+    public static Booking booking;
 
 
     public HomePanel(MainFrame mainFrame) {
@@ -42,12 +41,8 @@ public class HomePanel extends JPanel {
                 pst.setInt(1, MainFrame.loggedInUser.getUserID());
                 ResultSet rs = pst.executeQuery();
 
-                bookedPropertiesList = Property.selectProperties(rs);
-
-                query = "SELECT * FROM Bookings WHERE UserID = ?";
-                pst = con.prepareStatement(query);
-                pst.setInt(1, MainFrame.loggedInUser.getUserID());
-                rs = pst.executeQuery();
+                JPanel bookedPropertiesPanel = new JPanel();
+                bookedPropertiesPanel.setLayout(new BoxLayout(bookedPropertiesPanel, BoxLayout.Y_AXIS));
 
                 while (rs.next()) {
                     int guestID = rs.getInt("UserID");
@@ -56,14 +51,14 @@ public class HomePanel extends JPanel {
                     LocalDate endDate = rs.getDate("EndDate").toLocalDate();
                     boolean isAccepted = rs.getBoolean("IsAccepted");
 
-                    bookingsMap.put(propertyID, new Booking(guestID, propertyID, startDate, endDate, isAccepted));
+                    booking = new Booking(guestID, propertyID, startDate, endDate, isAccepted);
+                    bookingsList.add(booking);
+
+                    Property property = Property.selectProperty(rs);
+                    bookedPropertiesList.add(property);
+                    bookedPropertiesPanel.add(new PropertyBookmarkPanel(this, property));
                 }
 
-                JPanel bookedPropertiesPanel = new JPanel();
-                bookedPropertiesPanel.setLayout(new BoxLayout(bookedPropertiesPanel, BoxLayout.Y_AXIS));
-                for (Property p : bookedPropertiesList) {
-                    bookedPropertiesPanel.add(new PropertyBookmarkPanel(this, p));
-                }
                 add(bookedPropertiesPanel);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -79,14 +74,8 @@ public class HomePanel extends JPanel {
                 pst.setInt(1, MainFrame.loggedInUser.getUserID());
                 ResultSet rs = pst.executeQuery();
 
-                bookedPropertiesList = Property.selectProperties(rs);
-
-                query = "SELECT * FROM Bookings as b, Properties AS p " +
-                        "WHERE b.PropertyID = p.PropertyID" +
-                        "  AND p.UserID = ?";
-                pst = con.prepareStatement(query);
-                pst.setInt(1, MainFrame.loggedInUser.getUserID());
-                rs = pst.executeQuery();
+                JPanel bookedPropertiesPanel = new JPanel();
+                bookedPropertiesPanel.setLayout(new BoxLayout(bookedPropertiesPanel, BoxLayout.Y_AXIS));
 
                 while (rs.next()) {
                     int guestID = rs.getInt("b.UserID");
@@ -95,15 +84,27 @@ public class HomePanel extends JPanel {
                     LocalDate endDate = rs.getDate("EndDate").toLocalDate();
                     boolean isAccepted = rs.getBoolean("IsAccepted");
 
-                    bookingsMap.put(propertyID, new Booking(guestID, propertyID, startDate, endDate, isAccepted));
-                    bookingsList.add(new Booking(guestID, propertyID, startDate, endDate, isAccepted));
+                    booking = new Booking(guestID, propertyID, startDate, endDate, isAccepted);
+                    bookingsList.add(booking);
+                    Property property = Property.selectProperty(rs);
+                    bookedPropertiesList.add(property);
+
+                    query = "SELECT * FROM Users WHERE UserID = ?";
+                    PreparedStatement pstGuest = con.prepareStatement(query);
+                    pstGuest.setInt(1, guestID);
+                    ResultSet rsGuest = pstGuest.executeQuery();
+                    rsGuest.next();
+
+                    String forename = rsGuest.getString("Forename");
+                    String surname = rsGuest.getString("Surname");
+                    String email = rsGuest.getString("Email");
+                    String mobile = rsGuest.getString("Mobile");
+                    String role = rsGuest.getString("Role");
+
+                    guest = new User(guestID, forename, surname, email, mobile, role);
+                    bookedPropertiesPanel.add(new PropertyBookmarkPanel(this, property));
                 }
 
-                JPanel bookedPropertiesPanel = new JPanel();
-                bookedPropertiesPanel.setLayout(new BoxLayout(bookedPropertiesPanel, BoxLayout.Y_AXIS));
-                for (Property p : bookedPropertiesList) {
-                    bookedPropertiesPanel.add(new PropertyBookmarkPanel(this, p));
-                }
                 add(bookedPropertiesPanel);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -113,10 +114,6 @@ public class HomePanel extends JPanel {
 
     public MainFrame getMainFrame() {
         return mainFrame;
-    }
-
-    public HashMap<Integer, Booking> getBookingsMap() {
-        return bookingsMap;
     }
 
     public ArrayList<Booking> getBookingsList() {
