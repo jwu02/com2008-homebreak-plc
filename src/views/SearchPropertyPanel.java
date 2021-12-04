@@ -116,7 +116,7 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
                     return "End date cannot be on or before start date.";
                 }
 
-                if (LocalDate.now().isBefore(startDate)) {
+                if (!startDate.isAfter(LocalDate.now())) {
                     return "Please search for a date in the future.";
                 }
             } catch (Exception ex) {
