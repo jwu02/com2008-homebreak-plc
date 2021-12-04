@@ -62,31 +62,36 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
         String command = e.getActionCommand();
         String dialogMessage;
         if (command.equals("Search")) {
-            dialogMessage = validateSearchCriteria();
-            // if no message returned, the start and end dates are valid
+            dialogMessage = validateSearchCriteria(); // returns a string error message
             if (dialogMessage != null) {
                 JOptionPane.showMessageDialog(this, dialogMessage, "Search Property",
                         JOptionPane.WARNING_MESSAGE);
             } else {
+                // if no error message returned, null, then requested start and end dates are valid
                 try (Connection con = getConnection()) {
+                    // query return all properties matching the requested location
                     String query = "SELECT * FROM Properties AS p, Users AS u, Addresses AS a " +
                             "WHERE p.UserID = u.UserID " +
                             "AND p.AddressID = a.AddressID " +
                             "AND a.Place LIKE ?";
 
                     PreparedStatement pst = con.prepareStatement(query);
+                    // pattern matching provided location field to any part of a string
                     pst.setString(1, "%" + requestLocationField.getText() + "%");
                     ResultSet rs = pst.executeQuery();
 
                     filteredProperties = new ArrayList<>();
+                    // return Property objects from result set
                     while (rs.next()) {
                         filteredProperties.add(Property.selectProperty(rs));
                     }
 
+                    // so a new set of filtered properties are displayed on the GUI
                     this.remove(filteredPropertiesPanel);
                     filteredPropertiesPanel = new JPanel();
                     filteredPropertiesPanel.setLayout(new BoxLayout(filteredPropertiesPanel, BoxLayout.Y_AXIS));
                     for (Property p : filteredProperties) {
+                        // create a bookmark for each filtered property matching the requested location
                         filteredPropertiesPanel.add(new SearchPropertyPanelBookmarkPanel(this, p));
                     }
                     add(filteredPropertiesPanel);
