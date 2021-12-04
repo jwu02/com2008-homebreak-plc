@@ -22,30 +22,6 @@ public class LivingFacility extends Facility {
         this.hasBoardGames = hasBoardGames;
     }
 
-    public boolean hasWifi() {
-        return hasWifi;
-    }
-
-    public boolean hasTelevision() {
-        return hasTelevision;
-    }
-
-    public boolean hasSatellite() {
-        return hasSatellite;
-    }
-
-    public boolean hasStreaming() {
-        return hasStreaming;
-    }
-
-    public boolean hasDvdPlayer() {
-        return hasDvdPlayer;
-    }
-
-    public boolean hasBoardGames() {
-        return hasBoardGames;
-    }
-
     public LinkedHashMap<String, Boolean> getFacilityMap() {
         livingFacilityMap.put("hasWifi", hasWifi);
         livingFacilityMap.put("hasTelevision", hasTelevision);

@@ -18,18 +18,6 @@ public class BathingFacility extends Facility {
         this.bathrooms = bathrooms;
     }
 
-    public boolean hasHairDryer() {
-        return hasHairDryer;
-    }
-
-    public boolean hasShampoo() {
-        return hasShampoo;
-    }
-
-    public boolean hasToiletPaper() {
-        return hasToiletPaper;
-    }
-
     public ArrayList<Bathroom> getBathrooms() {
         return bathrooms;
     }

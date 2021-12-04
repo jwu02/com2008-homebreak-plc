@@ -1,14 +1,14 @@
 package models;
 
 public class Review {
-    int userID;
-    int propertyID;
-    int checkinScore;
-    int accuracyScore;
-    int locationScore;
-    int valueScore;
-    int cleaninessScore;
-    int communicationScore;
+    private int userID;
+    private int propertyID;
+    private int checkinScore;
+    private int accuracyScore;
+    private int locationScore;
+    private int valueScore;
+    private int cleaninessScore;
+    private int communicationScore;
 
     public Review(int userID, int propertyID, int checkinScore, int accuracyScore, int locationScore,
                   int valueScore, int cleaninessScore, int communicationScore) {

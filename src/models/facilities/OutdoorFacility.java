@@ -20,26 +20,6 @@ public class OutdoorFacility extends Facility {
         this.hasBarbecue = hasBarbecue;
     }
 
-    public boolean hasFreeOnsiteParking() {
-        return hasFreeOnsiteParking;
-    }
-
-    public boolean hasOnRoadParking() {
-        return hasOnRoadParking;
-    }
-
-    public boolean hasPaidCarPark() {
-        return hasPaidCarPark;
-    }
-
-    public boolean hasPatio() {
-        return hasPatio;
-    }
-
-    public boolean hasBarbecue() {
-        return hasBarbecue;
-    }
-
     public LinkedHashMap<String, Boolean> getFacilityMap() {
         outdoorFacilityMap.put("hasFreeOnsiteParking", hasFreeOnsiteParking);
         outdoorFacilityMap.put("hasOnRoadParking", hasOnRoadParking);

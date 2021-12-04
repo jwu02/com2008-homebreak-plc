@@ -26,38 +26,6 @@ public class KitchenFacility extends Facility {
         this.hasBasicProvisions = hasBasicProvisions;
     }
 
-    public boolean hasRefrigerator() {
-        return hasRefrigerator;
-    }
-
-    public boolean hasMicrowave() {
-        return hasMicrowave;
-    }
-
-    public boolean hasOven() {
-        return hasOven;
-    }
-
-    public boolean hasStove() {
-        return hasStove;
-    }
-
-    public boolean hasDishwasher() {
-        return hasDishwasher;
-    }
-
-    public boolean hasTableware() {
-        return hasTableware;
-    }
-
-    public boolean hasCookware() {
-        return hasCookware;
-    }
-
-    public boolean hasBasicProvisions() {
-        return hasBasicProvisions;
-    }
-
     public LinkedHashMap<String, Boolean> getFacilityMap() {
         kitchenFacilityMap.put("hasRefrigerator", hasRefrigerator);
         kitchenFacilityMap.put("hasMicrowave", hasMicrowave);

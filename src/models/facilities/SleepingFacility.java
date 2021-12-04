@@ -16,14 +16,6 @@ public class SleepingFacility extends Facility {
         this.bedrooms = bedrooms;
     }
 
-    public boolean hasBedLinen() {
-        return hasBedLinen;
-    }
-
-    public boolean hasTowels() {
-        return hasTowels;
-    }
-
     public ArrayList<Bedroom> getBedrooms() {
         return bedrooms;
     }

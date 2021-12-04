@@ -22,30 +22,6 @@ public class UtilityFacility extends Facility {
         this.hasFirstAidKit = hasFirstAidKit;
     }
 
-    public boolean hasHeating() {
-        return hasHeating;
-    }
-
-    public boolean hasWashingMachine() {
-        return hasWashingMachine;
-    }
-
-    public boolean hasDryingMachine() {
-        return hasDryingMachine;
-    }
-
-    public boolean hasFireExtinguisher() {
-        return hasFireExtinguisher;
-    }
-
-    public boolean hasSmokeAlarm() {
-        return hasSmokeAlarm;
-    }
-
-    public boolean hasFirstAidKit() {
-        return hasFirstAidKit;
-    }
-
     public LinkedHashMap<String, Boolean> getFacilityMap() {
         utilityFacilityMap.put("hasHeating", hasHeating);
         utilityFacilityMap.put("hasWashingMachine", hasWashingMachine);
