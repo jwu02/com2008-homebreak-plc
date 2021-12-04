@@ -102,8 +102,7 @@ public class MorePropertyDetailsFrame extends JFrame {
         add(userDetailsPanel);
 
         JPanel propertyDetailsPanel = new JPanel(new GridBagLayout());
-        Border propertyDetailsPanelBorder = BorderFactory.createTitledBorder("Property Details");
-        propertyDetailsPanel.setBorder(propertyDetailsPanelBorder);
+        propertyDetailsPanel.setBorder(BorderFactory.createTitledBorder("Property Details"));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -117,8 +116,7 @@ public class MorePropertyDetailsFrame extends JFrame {
         add(propertyDetailsPanel);
 
         JPanel costDetailsPanel = new JPanel(new GridBagLayout());
-        Border costDetailsPanelBorder = BorderFactory.createTitledBorder("Cost Details");
-        costDetailsPanel.setBorder(costDetailsPanelBorder);
+        costDetailsPanel.setBorder(BorderFactory.createTitledBorder("Cost Details"));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -154,8 +152,7 @@ public class MorePropertyDetailsFrame extends JFrame {
 
         if (backReferencePanel instanceof HomePanelBookmarkPanel && booking.isAccepted()) {
             JPanel addressDetailsPanel = new JPanel(new GridBagLayout());
-            Border addressDetailsPanelBorder = BorderFactory.createTitledBorder("Address Details");
-            addressDetailsPanel.setBorder(addressDetailsPanelBorder);
+            addressDetailsPanel.setBorder(BorderFactory.createTitledBorder("Address Details"));
             gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.gridy = 0;
@@ -187,8 +184,7 @@ public class MorePropertyDetailsFrame extends JFrame {
 
         JPanel facilityDetailsPanel = new JPanel();
         facilityDetailsPanel.setLayout(new BoxLayout(facilityDetailsPanel, BoxLayout.Y_AXIS));
-        Border facilityDetailsPanelBorder = BorderFactory.createTitledBorder("Facility Details");
-        facilityDetailsPanel.setBorder(facilityDetailsPanelBorder);
+        facilityDetailsPanel.setBorder(BorderFactory.createTitledBorder("Facility Details"));
 
         String[] facilityNames = property.getFacilitiesMap().keySet().toArray(new String[property.getFacilitiesMap().size()]);
         for (int i=0; i<facilityNames.length; i++) {

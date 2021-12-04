@@ -2,6 +2,7 @@ package views;
 
 import models.Booking;
 import models.Property;
+import models.Review;
 import models.User;
 
 import javax.swing.*;
@@ -43,7 +44,28 @@ public class HomePanel extends JPanel {
                     boolean isAccepted = rs.getBoolean("IsAccepted");
 
                     Property property = Property.selectProperty(rs);
-                    Booking booking = new Booking(MainFrame.loggedInUser, property, startDate, endDate, isAccepted);
+
+                    // get related review to a property if it exists
+                    query = "SELECT * From Reviews WHERE UserID = ? AND PropertyID = ? LIMIT 1";
+                    PreparedStatement pstReview = con.prepareStatement(query);
+                    pstReview.setInt(1, MainFrame.loggedInUser.getUserID());
+                    pstReview.setInt(2, property.getPropertyID());
+
+                    Review review = null;
+                    ResultSet rsReview = pstReview.executeQuery();
+                    if (rsReview.next()) {
+                        int checkInScore = rsReview.getInt("CheckInScore");
+                        int accuracyScore = rsReview.getInt("AccuracyScore");
+                        int locationScore = rsReview.getInt("LocationScore");
+                        int valueScore = rsReview.getInt("ValueScore");
+                        int cleaninessScore = rsReview.getInt("CleaninessScore");
+                        int communicationScore = rsReview.getInt("CommunicationScore");
+
+                        review = new Review(MainFrame.loggedInUser.getUserID(), property.getPropertyID(), checkInScore,
+                                accuracyScore, locationScore, valueScore, cleaninessScore, communicationScore);
+                    }
+
+                    Booking booking = new Booking(MainFrame.loggedInUser, property, startDate, endDate, isAccepted, review);
 
                     bookedPropertiesPanel.add(new HomePanelBookmarkPanel(this, booking));
                 }
@@ -86,7 +108,7 @@ public class HomePanel extends JPanel {
 
                     User guest = new User(guestID, forename, surname, email, mobile, role);
                     Property property = Property.selectProperty(rs);
-                    Booking booking = new Booking(guest, property, startDate, endDate, isAccepted);
+                    Booking booking = new Booking(guest, property, startDate, endDate, isAccepted, null);
 
                     bookedPropertiesPanel.add(new HomePanelBookmarkPanel(this, booking));
                 }

@@ -1,21 +1,22 @@
 package models;
 
-import java.time.Duration;
 import java.time.LocalDate;
 
 public class Booking {
+    private User guest;
+    private Property property;
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean isAccepted;
-    private User guest;
-    private Property property;
+    private Review review;
 
-    public Booking(User guest, Property property, LocalDate startDate, LocalDate endDate, boolean isAccepted) {
+    public Booking(User guest, Property property, LocalDate startDate, LocalDate endDate, boolean isAccepted, Review review) {
         this.guest = guest;
         this.property = property;
         this.startDate = startDate;
         this.endDate = endDate;
         this.isAccepted = isAccepted;
+        this.review = review;
     }
 
     public User getGuest() {
@@ -38,11 +39,11 @@ public class Booking {
         return isAccepted;
     }
 
-    public long getNumberOfNights() {
-        return Duration.between(startDate, endDate).toDays();
+    public Review getReview() {
+        return review;
     }
 
-    public static void deleteExpiredBooking() {
-
+    public void setReview(Review review) {
+        this.review = review;
     }
 }

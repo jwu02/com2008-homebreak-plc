@@ -119,6 +119,8 @@ public class HomePanelBookmarkPanel extends JPanel implements ActionListener {
             MainFrame mainFrame = backReferencePanel.getMainFrame();
             mainFrame.getTabbedPane().remove(0);
             mainFrame.getTabbedPane().insertTab("Home",null,new HomePanel(mainFrame),null,0);
+        } else if (command.equals("Review")) {
+            new PropertyReviewDetailsFrame(booking);
         }
     }
 
