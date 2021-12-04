@@ -66,7 +66,6 @@ public class User {
     public boolean getIsSuperHost() {return isSuperHost;}
 
     public boolean isSuperHost() {
-        // TODO implement functionality for super host check
         try (Connection con = getConnection()) {
             String query = "SELECT SUM(CheckinScore + AccuracyScore + LocationScore + ValueScore + CleaninessScore + CommunicationScore) / (COUNT(*)*6) as AvgReviewScore" +
                     " FROM Reviews as r, Properties as p" +
