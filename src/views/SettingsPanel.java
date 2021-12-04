@@ -1,6 +1,5 @@
 package views;
 
-import BroCodeTutorial.Main;
 import models.User;
 
 import javax.swing.*;
