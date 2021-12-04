@@ -101,7 +101,7 @@ public class RegistrationPanel extends JPanel implements ActionListener {
 
                     ResultSet resultSet = pst.executeQuery();
 
-                    // if user with given email doesn't exist already insert otherwise return error message
+                    // if user with given email doesn't exist already register details otherwise return error message
                     if (!resultSet.isBeforeFirst()) {
                         query = "INSERT INTO Users VALUES (null, ?, ?, ?, SHA1(?), ?, ?, ?)";
                         pst = con.prepareStatement(query);
@@ -120,7 +120,6 @@ public class RegistrationPanel extends JPanel implements ActionListener {
 
                             // clear all field entries if registration was successful
                             clearRegistrationFields();
-                            inputAddressDetailsPanel.clearAddressDetailFields();
 
                             dialogMessage = "Successfully registered.";
                             JOptionPane.showMessageDialog(this, dialogMessage);
@@ -149,5 +148,7 @@ public class RegistrationPanel extends JPanel implements ActionListener {
         password.setText("");
         mobile.setText("");
         roleButtonGroup.clearSelection();
+
+        inputAddressDetailsPanel.clearAddressDetailFields();
     }
 }

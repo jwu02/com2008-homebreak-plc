@@ -1,6 +1,7 @@
 package views;
 
 import models.User;
+import views.createProperty.CreatePropertyPanel;
 
 import javax.swing.*;
 import java.awt.*;

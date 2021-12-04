@@ -149,7 +149,10 @@ public class MorePropertyDetailsFrame extends JFrame {
         costDetailsPanel.add(new JLabel("£"+totalCost),gbc);
         add(costDetailsPanel);
 
-        if (backReferencePanel instanceof HomePanelBookmarkPanel && booking.isAccepted()) {
+        // display address if logged in user is host (viewing their own requested bookings from other users)
+        // or if the booking is accepted (user viewing it as a guest)
+        if (backReferencePanel instanceof HomePanelBookmarkPanel &&
+                (MainFrame.loggedInUser.getRole().equals("host") || booking.isAccepted())) {
             JPanel addressDetailsPanel = new JPanel(new GridBagLayout());
             addressDetailsPanel.setBorder(BorderFactory.createTitledBorder("Address Details"));
             gbc = new GridBagConstraints();

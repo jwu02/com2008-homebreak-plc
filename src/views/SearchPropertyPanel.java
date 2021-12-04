@@ -60,13 +60,12 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
+        String dialogMessage;
         if (command.equals("Search")) {
-            if (requestLocationField.getText().equals("") || requestStartDateField.getText().equals("") ||
-                    requestEndDateField.getText().equals("")) {
-                JOptionPane.showMessageDialog(this, "Please fill in all search criterions.");
-            } else if (getRequestedStartDate().isAfter(getRequestedEndDate())) {
-                JOptionPane.showMessageDialog(this, "Please enter a start date before the end date or vice versa.",
-                        "Search property", JOptionPane.WARNING_MESSAGE);
+            dialogMessage = validateSearchCriteria();
+            // if no message returned, the start and end dates are valid
+            if (dialogMessage != null) {
+                JOptionPane.showMessageDialog(this, dialogMessage, "Search Property", JOptionPane.WARNING_MESSAGE);
             } else {
                 try (Connection con = getConnection()) {
                     String query = "SELECT * FROM Properties AS p, Users AS u, Addresses AS a " +
@@ -95,10 +94,37 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
                     repaint();
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    String message = "Error searching for property. Please check input criterions.";
-                    JOptionPane.showMessageDialog(this, message,"Search Property", JOptionPane.WARNING_MESSAGE);
+
+                    dialogMessage = "An error occurred searching for properties.";
+                    JOptionPane.showMessageDialog(this, dialogMessage,"Search Property", JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
+    }
+
+    public String validateSearchCriteria() {
+        if (requestLocationField.getText().equals("") || requestStartDateField.getText().equals("") ||
+                requestEndDateField.getText().equals("")) {
+            return "Please fill in all search criterions.";
+        } else {
+            try {
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate startDate = LocalDate.parse(requestStartDateField.getText(), dtf);
+                LocalDate endDate = LocalDate.parse(requestEndDateField.getText(), dtf);
+
+                if (!startDate.isBefore(endDate)) {
+                    return "End date cannot be on or before start date.";
+                }
+
+                if (LocalDate.now().isBefore(startDate)) {
+                    return "Please search for a date in the future.";
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return "Dates cannot be parsed. Please enter date in yyyy-MM-dd format.";
+            }
+        }
+
+        return null;
     }
 }
