@@ -8,7 +8,6 @@ public class Booking {
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean isAccepted;
-    private Review review;
 
     public Booking(User guest, Property property, LocalDate startDate, LocalDate endDate, boolean isAccepted, Review review) {
         this.guest = guest;
@@ -16,7 +15,6 @@ public class Booking {
         this.startDate = startDate;
         this.endDate = endDate;
         this.isAccepted = isAccepted;
-        this.review = review;
     }
 
     public User getGuest() {
@@ -37,13 +35,5 @@ public class Booking {
 
     public boolean isAccepted() {
         return isAccepted;
-    }
-
-    public Review getReview() {
-        return review;
-    }
-
-    public void setReview(Review review) {
-        this.review = review;
     }
 }

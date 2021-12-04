@@ -148,7 +148,7 @@ public class MorePropertyDetailsFrame extends JFrame {
             gbc.gridy = 3;
             addressDetailsPanel.add(new JLabel(property.getLocation().getPostcode()), gbc);
 
-            add(addressDetailsPanel);
+            moreDetailsPanel.add(addressDetailsPanel);
         }
 
         JPanel costDetailsPanel = new JPanel(new GridBagLayout());

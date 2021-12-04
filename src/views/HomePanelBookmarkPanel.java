@@ -74,6 +74,10 @@ public class HomePanelBookmarkPanel extends JPanel implements ActionListener {
         add(cancelBookingButton, gbc);
     }
 
+    public HomePanel getBackReferencePanel() {
+        return backReferencePanel;
+    }
+
     public Booking getBooking() {
         return booking;
     }
@@ -120,7 +124,7 @@ public class HomePanelBookmarkPanel extends JPanel implements ActionListener {
             mainFrame.getTabbedPane().remove(0);
             mainFrame.getTabbedPane().insertTab("Home",null,new HomePanel(mainFrame),null,0);
         } else if (command.equals("Review")) {
-            new PropertyReviewDetailsFrame(booking);
+            new PropertyReviewDetailsFrame(this, booking);
         }
     }
 

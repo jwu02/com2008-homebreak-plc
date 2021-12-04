@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import static database.OpenConnection.getConnection;
 
 public class PropertyReviewDetailsFrame extends JFrame implements ActionListener {
+    private HomePanelBookmarkPanel backReferencePanel;
     private Booking booking;
 
     private JSpinner checkinScoreSpinner = new JSpinner(new SpinnerNumberModel(5,1,5,1));
@@ -22,9 +23,10 @@ public class PropertyReviewDetailsFrame extends JFrame implements ActionListener
     private JSpinner cleaninessScoreSpinner = new JSpinner(new SpinnerNumberModel(5,1,5,1));
     private JSpinner communicationScoreSpinner = new JSpinner(new SpinnerNumberModel(5,1,5,1));
 
-    public PropertyReviewDetailsFrame(Booking booking) {
+    public PropertyReviewDetailsFrame(HomePanelBookmarkPanel backReferencePanel, Booking booking) {
         super("Property Review Details");
 
+        this.backReferencePanel = backReferencePanel;
         this.booking = booking;
 
         setSize(400,400);
@@ -34,90 +36,50 @@ public class PropertyReviewDetailsFrame extends JFrame implements ActionListener
         reviewPanel.setBorder(BorderFactory.createTitledBorder("Review"));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        if (booking.getReview() == null) {
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            reviewPanel.add(new JLabel("Checkin Score: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 0;
-            reviewPanel.add(checkinScoreSpinner, gbc);
-            gbc.gridx = 0;
-            gbc.gridy = 1;
-            reviewPanel.add(new JLabel("Accuracy Score: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 1;
-            reviewPanel.add(accuracyScoreSpinner, gbc);
-            gbc.gridx = 0;
-            gbc.gridy = 2;
-            reviewPanel.add(new JLabel("Location Score: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 2;
-            reviewPanel.add(locationScoreSpinner, gbc);
-            gbc.gridx = 0;
-            gbc.gridy = 3;
-            reviewPanel.add(new JLabel("Value Score: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 3;
-            reviewPanel.add(valueScoreSpinner, gbc);
-            gbc.gridx = 0;
-            gbc.gridy = 4;
-            reviewPanel.add(new JLabel("Cleaniness Score: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 4;
-            reviewPanel.add(cleaninessScoreSpinner, gbc);
-            gbc.gridx = 0;
-            gbc.gridy = 5;
-            reviewPanel.add(new JLabel("Communication Score: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 5;
-            reviewPanel.add(communicationScoreSpinner, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        reviewPanel.add(new JLabel("Checkin Score: "), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        reviewPanel.add(checkinScoreSpinner, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        reviewPanel.add(new JLabel("Accuracy Score: "), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        reviewPanel.add(accuracyScoreSpinner, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        reviewPanel.add(new JLabel("Location Score: "), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        reviewPanel.add(locationScoreSpinner, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        reviewPanel.add(new JLabel("Value Score: "), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        reviewPanel.add(valueScoreSpinner, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        reviewPanel.add(new JLabel("Cleaniness Score: "), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        reviewPanel.add(cleaninessScoreSpinner, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        reviewPanel.add(new JLabel("Communication Score: "), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        reviewPanel.add(communicationScoreSpinner, gbc);
 
-            JButton addReviewButton = new JButton("Add Review");
-            addReviewButton.addActionListener(this);
-            gbc.gridx = 0;
-            gbc.gridy = 6;
-            gbc.gridwidth = 2;
-            reviewPanel.add(addReviewButton, gbc);
-        } else {
-            Review review = booking.getReview();
+        JButton addReviewButton = new JButton("Add Review");
+        addReviewButton.addActionListener(this);
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.gridwidth = 2;
+        reviewPanel.add(addReviewButton, gbc);
 
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            reviewPanel.add(new JLabel("Checkin Score: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 0;
-            reviewPanel.add(new JLabel(String.valueOf(review.getCheckinScore())), gbc);
-            gbc.gridx = 0;
-            gbc.gridy = 1;
-            reviewPanel.add(new JLabel("Accuracy Score: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 1;
-            reviewPanel.add(new JLabel(String.valueOf(review.getAccuracyScore())), gbc);
-            gbc.gridx = 0;
-            gbc.gridy = 2;
-            reviewPanel.add(new JLabel("Location Score: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 2;
-            reviewPanel.add(new JLabel(String.valueOf(review.getLocationScore())), gbc);
-            gbc.gridx = 0;
-            gbc.gridy = 3;
-            reviewPanel.add(new JLabel("Value Score: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 3;
-            reviewPanel.add(new JLabel(String.valueOf(review.getValueScore())), gbc);
-            gbc.gridx = 0;
-            gbc.gridy = 4;
-            reviewPanel.add(new JLabel("Cleaniness Score: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 4;
-            reviewPanel.add(new JLabel(String.valueOf(review.getCleaninessScore())), gbc);
-            gbc.gridx = 0;
-            gbc.gridy = 5;
-            reviewPanel.add(new JLabel("Communication Score: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 5;
-            reviewPanel.add(new JLabel(String.valueOf(review.getCommunicationScore())), gbc);
-        }
         add(reviewPanel);
 
         setVisible(true);
@@ -143,12 +105,21 @@ public class PropertyReviewDetailsFrame extends JFrame implements ActionListener
                 pst.setInt(6, review.getValueScore());
                 pst.setInt(7, review.getCleaninessScore());
                 pst.setInt(8, review.getCommunicationScore());
-
                 pst.executeUpdate();
 
-                booking.setReview(review);
                 JOptionPane.showMessageDialog(this, "Review has been added.");
                 this.dispose();
+
+                query = "DELETE FROM Bookings WHERE UserID = ? AND PropertyID = ?";
+                pst = con.prepareStatement(query);
+                pst.clearParameters();
+                pst.setInt(1, booking.getGuest().getUserID());
+                pst.setInt(2, booking.getProperty().getPropertyID());
+                pst.executeUpdate();
+
+                MainFrame mainFrame = backReferencePanel.getBackReferencePanel().getMainFrame();
+                mainFrame.getTabbedPane().remove(0);
+                mainFrame.getTabbedPane().insertTab("Home",null,new HomePanel(mainFrame),null,0);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
