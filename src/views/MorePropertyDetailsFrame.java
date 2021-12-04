@@ -13,20 +13,17 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 
 public class MorePropertyDetailsFrame extends JFrame {
-    private JPanel backReferencePanel;
-    private Property property;
     private Booking booking;
 
     public MorePropertyDetailsFrame(JPanel backReferencePanel) {
         super("More Details");
-
-        this.backReferencePanel = backReferencePanel;
 
         long numberOfNights;
         BigDecimal totalServiceCharge;
         BigDecimal totalCleaningCharge;
         BigDecimal totalCost;
 
+        Property property;
         if (backReferencePanel instanceof SearchPropertyPanelBookmarkPanel) {
             property = ((SearchPropertyPanelBookmarkPanel) backReferencePanel).getProperty();
 
@@ -78,7 +75,7 @@ public class MorePropertyDetailsFrame extends JFrame {
         gbc.gridx = 1;
         gbc.gridy = 0;
         userDetailsPanel.add(new JLabel(userForename), gbc);
-        if (this.backReferencePanel instanceof HomePanelBookmarkPanel && booking.isAccepted()) {
+        if (backReferencePanel instanceof HomePanelBookmarkPanel && booking.isAccepted()) {
             // only display confidential information if a booking is accepted and displayed on home panel
             gbc.gridx = 0;
             gbc.gridy = 1;
@@ -116,7 +113,7 @@ public class MorePropertyDetailsFrame extends JFrame {
         propertyDetailsPanel.add(new JLabel("Offers breakfast: " + (property.getOfferBreakfast() ? "Yes" : "No")),gbc);
         gbc.gridx = 0;
         gbc.gridy = 2;
-        propertyDetailsPanel.add(new JLabel("<html>"+property.getDescription()+"</html>"),gbc);
+        propertyDetailsPanel.add(new JLabel("<html>"+ property.getDescription()+"</html>"),gbc);
         moreDetailsPanel.add(propertyDetailsPanel);
 
         // display address if logged in user is host (viewing their own requested bookings from other users)
@@ -168,7 +165,7 @@ public class MorePropertyDetailsFrame extends JFrame {
         costDetailsPanel.add(new JLabel("Price per night: "),gbc);
         gbc.gridx = 1;
         gbc.gridy = 1;
-        costDetailsPanel.add(new JLabel("£"+property.getPricePerNight()),gbc);
+        costDetailsPanel.add(new JLabel("£"+ property.getPricePerNight()),gbc);
         gbc.gridx = 0;
         gbc.gridy = 2;
         costDetailsPanel.add(new JLabel("Total service charge: "),gbc);
@@ -255,7 +252,7 @@ public class MorePropertyDetailsFrame extends JFrame {
             // facilities map, maps each facility name to the corresponding facility object
             LinkedHashMap<String, Boolean> facilityMap = property.getFacilitiesMap().get(facilityName).getFacilityMap();
             // from which we can obtain another map for all the column labels of a facility table
-            String[] columnLabels = facilityMap.keySet().toArray(new String[facilityMap.size()]);
+            String[] columnLabels = facilityMap.keySet().toArray(new String[0]);
 
             // store facility details in an array to create a table presenting the results
             String[] rowData = new String[columnLabels.length];

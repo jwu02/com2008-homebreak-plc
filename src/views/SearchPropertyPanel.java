@@ -65,7 +65,8 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
             dialogMessage = validateSearchCriteria();
             // if no message returned, the start and end dates are valid
             if (dialogMessage != null) {
-                JOptionPane.showMessageDialog(this, dialogMessage, "Search Property", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, dialogMessage, "Search Property",
+                        JOptionPane.WARNING_MESSAGE);
             } else {
                 try (Connection con = getConnection()) {
                     String query = "SELECT * FROM Properties AS p, Users AS u, Addresses AS a " +
@@ -96,7 +97,8 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
                     ex.printStackTrace();
 
                     dialogMessage = "An error occurred searching for properties.";
-                    JOptionPane.showMessageDialog(this, dialogMessage,"Search Property", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, dialogMessage,"Search Property",
+                            JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
