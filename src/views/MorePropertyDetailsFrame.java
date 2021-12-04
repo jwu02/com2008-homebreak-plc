@@ -249,23 +249,24 @@ public class MorePropertyDetailsFrame extends JFrame {
         facilityDetailsPanel.setLayout(new BoxLayout(facilityDetailsPanel, BoxLayout.Y_AXIS));
         facilityDetailsPanel.setBorder(BorderFactory.createTitledBorder("Facilities Details"));
 
-        String[] facilityNames = property.getFacilitiesMap().keySet().toArray(new String[property.getFacilitiesMap().size()]);
-        for (int i=0; i<facilityNames.length; i++) {
-            LinkedHashMap<String, Boolean> facilityMap = property.getFacilitiesMap().get(facilityNames[i]).getFacilityMap();
+        // for each facility
+        for (String facilityName : property.getFacilitiesMap().keySet()) {
+            // get corresponding facility map
+            // facilities map, maps each facility name to the corresponding facility object
+            LinkedHashMap<String, Boolean> facilityMap = property.getFacilitiesMap().get(facilityName).getFacilityMap();
+            // from which we can obtain another map for all the column labels of a facility table
             String[] columnLabels = facilityMap.keySet().toArray(new String[facilityMap.size()]);
 
+            // store facility details in an array to create a table presenting the results
             String[] rowData = new String[columnLabels.length];
             for (int j=0; j<columnLabels.length; j++) {
-                if (facilityMap.get(columnLabels[j])) {
-                    rowData[j] = "yes";
-                } else {
-                    rowData[j] = "no";
-                }
+                // return yes or no depending on whether a facility has something
+                rowData[j] = facilityMap.get(columnLabels[j]) ? "yes" : "no";
             }
 
             String[][] tableData = {rowData};
             JTable facilityTable = new JTable(tableData, columnLabels);
-            facilityDetailsPanel.add(new JLabel(facilityNames[i]));
+            facilityDetailsPanel.add(new JLabel(facilityName));
             facilityDetailsPanel.add(facilityTable);
         }
 
