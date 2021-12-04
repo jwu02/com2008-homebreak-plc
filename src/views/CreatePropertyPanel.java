@@ -2,6 +2,7 @@ package views;
 
 import database.InsertAddress;
 import models.Address;
+import models.Property;
 import models.facilities.Bathroom;
 import models.facilities.Bedroom;
 import models.ChargeBand;
@@ -30,7 +31,6 @@ public class CreatePropertyPanel extends JPanel {
     private JTextField place = new JTextField(20);
     private JTextField postcode = new JTextField(20);
 
-    private JPanel chargeBandDetailsPanel = new JPanel();
     private JPanel addedChargeBandsPanel = new JPanel();
 
     private ArrayList<ChargeBand> chargeBandsList = new ArrayList<>();
@@ -195,20 +195,23 @@ public class CreatePropertyPanel extends JPanel {
                         "Property Details", JOptionPane.WARNING_MESSAGE);
             } else {
                 try {
-                    // check if value for the price per night is valid
-                    new BigDecimal(pricePerNight.getText());
+                    // check if value for the price per night is valid and the property can be created
+                    Property property = new Property(0, name.getText(), description.getText(),
+                            new BigDecimal(pricePerNight.getText()), offerBreakfast.isSelected(),
+                            null, null, null, null);
+
                     cardLayout.next(this);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Please enter a valid price per night",
                             "Create property", JOptionPane.WARNING_MESSAGE);
                 }
-                cardLayout.next(this);
             }
         });
         confidentialDetailsPanel.add(nextButton1);
         add("propertyDetails",confidentialDetailsPanel);
 
         // card 2
+        JPanel chargeBandDetailsPanel = new JPanel();
         chargeBandDetailsPanel.setLayout(new BoxLayout(chargeBandDetailsPanel,BoxLayout.Y_AXIS));
 
         JPanel chargeBandDetailsInputPanel = new JPanel(new GridBagLayout());

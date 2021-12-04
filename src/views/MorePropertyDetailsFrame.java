@@ -4,7 +4,6 @@ import models.Booking;
 import models.Property;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
@@ -96,7 +95,7 @@ public class MorePropertyDetailsFrame extends JFrame {
             userDetailsPanel.add(new JLabel("Is super host: "), gbc);
             gbc.gridx = 1;
             gbc.gridy = 3;
-            userDetailsPanel.add(new JLabel(property.getHost().isSuperHost() ? "Yes" : "No"), gbc);
+            userDetailsPanel.add(new JLabel(property.getHost().getIsSuperHost() ? "Yes" : "No"), gbc);
         }
 
         add(userDetailsPanel);

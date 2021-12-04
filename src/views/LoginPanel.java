@@ -65,7 +65,7 @@ public class LoginPanel extends JPanel {
 
     public void login() throws SQLException {
         try (Connection con = getConnection()) {
-            String query = "SELECT * FROM Users WHERE Email=? AND Password=? LIMIT 1";
+            String query = "SELECT * FROM Users WHERE Email=? AND Password=SHA1(?) LIMIT 1";
             PreparedStatement pst = con.prepareStatement(query);
             pst.clearParameters();
             pst.setString(1, email.getText());

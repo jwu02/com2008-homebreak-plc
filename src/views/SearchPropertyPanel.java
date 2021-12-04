@@ -22,7 +22,6 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
     private JPanel filteredPropertiesPanel = new JPanel();
     private ArrayList<Property> filteredProperties = new ArrayList<>();
 
-
     public SearchPropertyPanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
 

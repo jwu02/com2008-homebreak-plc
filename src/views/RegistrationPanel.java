@@ -144,8 +144,7 @@ public class RegistrationPanel extends JPanel {
 
             // if user with given email doesn't exist already insert otherwise return error message
             if (!resultSet.isBeforeFirst()) {
-                // MD5() sql function hashes the password - REMEMBER TO ADD TO QUERY LATER
-                query = "INSERT INTO Users VALUES (null, ?, ?, ?, ?, ?, ?, ?)";
+                query = "INSERT INTO Users VALUES (null, ?, ?, ?, SHA1(?), ?, ?, ?)";
                 pst = con.prepareStatement(query);
                 pst.clearParameters();
                 pst.setString(1, forename.getText());

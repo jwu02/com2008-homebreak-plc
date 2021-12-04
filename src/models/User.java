@@ -1,5 +1,11 @@
 package models;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import static database.OpenConnection.getConnection;
+
 public class User {
     private int userID;
     private String forename;
@@ -7,6 +13,7 @@ public class User {
     private String email;
     private String mobile;
     private String role;
+    private boolean isSuperHost;
 
     public User() {
         // keep empty constructor for initial startup of application
@@ -26,6 +33,10 @@ public class User {
         this.email = email;
         this.mobile = mobile;
         this.role = role;
+        if (role.equals("host")) {
+            // store result of isSuperHost function, so it's only evaluated once in one login session
+            this.isSuperHost = isSuperHost();
+        }
     }
 
     public int getUserID() {
@@ -52,8 +63,30 @@ public class User {
         return role;
     }
 
+    public boolean getIsSuperHost() {return isSuperHost;}
+
     public boolean isSuperHost() {
         // TODO implement functionality for super host check
+        try (Connection con = getConnection()) {
+            String query = "SELECT SUM(CheckinScore + AccuracyScore + LocationScore + ValueScore + CleaninessScore + CommunicationScore) / (COUNT(*)*6) as AvgReviewScore" +
+                    " FROM Reviews as r, Properties as p" +
+                    " WHERE p.UserID = ?";
+
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.setInt(1, userID);
+
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                double averageReviewScore = rs.getDouble("AvgReviewScore");
+                if (averageReviewScore >= 4.7) {
+                    return true;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         return false;
     };
 }
