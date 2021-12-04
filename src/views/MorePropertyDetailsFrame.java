@@ -2,6 +2,10 @@ package views;
 
 import models.Booking;
 import models.Property;
+import models.facilities.BathingFacility;
+import models.facilities.Bathroom;
+import models.facilities.Bedroom;
+import models.facilities.SleepingFacility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +44,8 @@ public class MorePropertyDetailsFrame extends JFrame {
             totalCost = ((HomePanelBookmarkPanel) backReferencePanel).calculateTotalCost();
         }
 
-        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        JPanel moreDetailsPanel = new JPanel();
+        moreDetailsPanel.setLayout(new BoxLayout(moreDetailsPanel, BoxLayout.Y_AXIS));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(840, 420);
 
@@ -98,7 +103,7 @@ public class MorePropertyDetailsFrame extends JFrame {
             userDetailsPanel.add(new JLabel(property.getHost().getIsSuperHost() ? "Yes" : "No"), gbc);
         }
 
-        add(userDetailsPanel);
+        moreDetailsPanel.add(userDetailsPanel);
 
         JPanel propertyDetailsPanel = new JPanel(new GridBagLayout());
         propertyDetailsPanel.setBorder(BorderFactory.createTitledBorder("Property Details"));
@@ -112,42 +117,7 @@ public class MorePropertyDetailsFrame extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 2;
         propertyDetailsPanel.add(new JLabel("<html>"+property.getDescription()+"</html>"),gbc);
-        add(propertyDetailsPanel);
-
-        JPanel costDetailsPanel = new JPanel(new GridBagLayout());
-        costDetailsPanel.setBorder(BorderFactory.createTitledBorder("Cost Details"));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        costDetailsPanel.add(new JLabel("Number of nights: "),gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        costDetailsPanel.add(new JLabel(String.valueOf(numberOfNights)),gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        costDetailsPanel.add(new JLabel("Price per night: "),gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        costDetailsPanel.add(new JLabel("£"+property.getPricePerNight()),gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        costDetailsPanel.add(new JLabel("Total service charge: "),gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        costDetailsPanel.add(new JLabel("£"+totalServiceCharge),gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        costDetailsPanel.add(new JLabel("Total cleaning charge: "),gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        costDetailsPanel.add(new JLabel("£"+totalCleaningCharge),gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        costDetailsPanel.add(new JLabel("Total charge: "),gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 4;
-        costDetailsPanel.add(new JLabel("£"+totalCost),gbc);
-        add(costDetailsPanel);
+        moreDetailsPanel.add(propertyDetailsPanel);
 
         // display address if logged in user is host (viewing their own requested bookings from other users)
         // or if the booking is accepted (user viewing it as a guest)
@@ -184,9 +154,100 @@ public class MorePropertyDetailsFrame extends JFrame {
             add(addressDetailsPanel);
         }
 
+        JPanel costDetailsPanel = new JPanel(new GridBagLayout());
+        costDetailsPanel.setBorder(BorderFactory.createTitledBorder("Cost Details"));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        costDetailsPanel.add(new JLabel("Number of nights: "),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        costDetailsPanel.add(new JLabel(String.valueOf(numberOfNights)),gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        costDetailsPanel.add(new JLabel("Price per night: "),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        costDetailsPanel.add(new JLabel("£"+property.getPricePerNight()),gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        costDetailsPanel.add(new JLabel("Total service charge: "),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        costDetailsPanel.add(new JLabel("£"+totalServiceCharge),gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        costDetailsPanel.add(new JLabel("Total cleaning charge: "),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        costDetailsPanel.add(new JLabel("£"+totalCleaningCharge),gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        costDetailsPanel.add(new JLabel("Total charge: "),gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        costDetailsPanel.add(new JLabel("£"+totalCost),gbc);
+        moreDetailsPanel.add(costDetailsPanel);
+
+        JPanel bedroomDetailsPanel = new JPanel();
+        bedroomDetailsPanel.setLayout(new BoxLayout(bedroomDetailsPanel, BoxLayout.Y_AXIS));
+        bedroomDetailsPanel.setBorder(BorderFactory.createTitledBorder("Bedroom Details"));
+        for (Bedroom b : ((SleepingFacility) property.getFacilitiesMap().get("Sleeping Facility")).getBedrooms()) {
+            JPanel bedroomPanel = new JPanel(new GridBagLayout());
+            gbc = new GridBagConstraints();
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            bedroomPanel.add(new JLabel("Bed 1: "), gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 0;
+            bedroomPanel.add(new JLabel(b.getBed1()), gbc);
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            bedroomPanel.add(new JLabel("Bed 2: "), gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 1;
+            bedroomPanel.add(new JLabel(b.getBed2()), gbc);
+            bedroomDetailsPanel.add(bedroomPanel);
+        }
+        moreDetailsPanel.add(bedroomDetailsPanel);
+
+        JPanel bathroomDetailsPanel = new JPanel();
+        bathroomDetailsPanel.setLayout(new BoxLayout(bathroomDetailsPanel, BoxLayout.Y_AXIS));
+        bathroomDetailsPanel.setBorder(BorderFactory.createTitledBorder("Bathrooms Details"));
+        for (Bathroom b : ((BathingFacility) property.getFacilitiesMap().get("Bathing Facility")).getBathrooms()) {
+            JPanel bathroomPanel = new JPanel(new GridBagLayout());
+            gbc = new GridBagConstraints();
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            bathroomPanel.add(new JLabel("Has Toilet: "), gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 0;
+            bathroomPanel.add(new JLabel(b.getHasToilet() ? "Yes" : "No"), gbc);
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            bathroomPanel.add(new JLabel("Has Bath: "), gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 1;
+            bathroomPanel.add(new JLabel(b.getHasBath() ? "Yes" : "No"), gbc);
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            bathroomPanel.add(new JLabel("Has Shower: "), gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 2;
+            bathroomPanel.add(new JLabel(b.getHasShower() ? "Yes" : "No"), gbc);
+            gbc.gridx = 0;
+            gbc.gridy = 3;
+            bathroomPanel.add(new JLabel("Shared with Host: "), gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 3;
+            bathroomPanel.add(new JLabel(b.getSharedWithHost() ? "Yes" : "No"), gbc);
+            bathroomDetailsPanel.add(bathroomPanel);
+        }
+        moreDetailsPanel.add(bathroomDetailsPanel);
+
         JPanel facilityDetailsPanel = new JPanel();
         facilityDetailsPanel.setLayout(new BoxLayout(facilityDetailsPanel, BoxLayout.Y_AXIS));
-        facilityDetailsPanel.setBorder(BorderFactory.createTitledBorder("Facility Details"));
+        facilityDetailsPanel.setBorder(BorderFactory.createTitledBorder("Facilities Details"));
 
         String[] facilityNames = property.getFacilitiesMap().keySet().toArray(new String[property.getFacilitiesMap().size()]);
         for (int i=0; i<facilityNames.length; i++) {
@@ -205,10 +266,16 @@ public class MorePropertyDetailsFrame extends JFrame {
             String[][] tableData = {rowData};
             JTable facilityTable = new JTable(tableData, columnLabels);
             facilityDetailsPanel.add(new JLabel(facilityNames[i]));
-            facilityDetailsPanel.add(new JScrollPane(facilityTable));
+            facilityDetailsPanel.add(facilityTable);
         }
 
-        add(facilityDetailsPanel);
+        moreDetailsPanel.add(facilityDetailsPanel);
+
+        JScrollPane scrollPane = new JScrollPane(moreDetailsPanel);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(15);
+        add(scrollPane);
 
         setVisible(true);
     }
