@@ -22,6 +22,7 @@ public class CreatePropertyPanel extends JPanel {
 
     private JTextField name = new JTextField(20);
     private JTextArea description = new JTextArea(5,20);
+    private JTextField pricePerNight = new JTextField(20);
     private JCheckBox offerBreakfast = new JCheckBox("Offer breakfast?");
 
     private JTextField house = new JTextField(20);
@@ -35,7 +36,6 @@ public class CreatePropertyPanel extends JPanel {
     private ArrayList<ChargeBand> chargeBandsList = new ArrayList<>();
     private JTextField startDate = new JTextField("yyyy-mm-dd");
     private JTextField endDate = new JTextField("yyyy-mm-dd");
-    private JTextField pricePerNight = new JTextField(10);
     private JTextField serviceCharge = new JTextField(10);
     private JTextField cleaningCharge = new JTextField(10);
     private JButton addChargeBandButton = new JButton("Add Charge Band");

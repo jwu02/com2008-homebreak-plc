@@ -4,26 +4,26 @@ import java.time.Duration;
 import java.time.LocalDate;
 
 public class Booking {
-    private int userID;
-    private int propertyID;
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean isAccepted;
+    private User guest;
+    private Property property;
 
-    public Booking(int userID, int propertyID, LocalDate startDate, LocalDate endDate, boolean isAccepted) {
-        this.userID = userID;
-        this.propertyID = propertyID;
+    public Booking(User guest, Property property, LocalDate startDate, LocalDate endDate, boolean isAccepted) {
+        this.guest = guest;
+        this.property = property;
         this.startDate = startDate;
         this.endDate = endDate;
         this.isAccepted = isAccepted;
     }
 
-    public int getUserID() {
-        return userID;
+    public User getGuest() {
+        return guest;
     }
 
-    public int getPropertyID() {
-        return propertyID;
+    public Property getProperty() {
+        return property;
     }
 
     public LocalDate getStartDate() {
@@ -42,5 +42,7 @@ public class Booking {
         return Duration.between(startDate, endDate).toDays();
     }
 
+    public static void deleteExpiredBooking() {
 
+    }
 }

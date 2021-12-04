@@ -88,7 +88,7 @@ public class SearchPropertyPanel extends JPanel implements ActionListener {
                     filteredPropertiesPanel = new JPanel();
                     filteredPropertiesPanel.setLayout(new BoxLayout(filteredPropertiesPanel, BoxLayout.Y_AXIS));
                     for (Property p : filteredProperties) {
-                        filteredPropertiesPanel.add(new PropertyBookmarkPanel(this, p));
+                        filteredPropertiesPanel.add(new SearchPropertyPanelBookmarkPanel(this, p));
                     }
                     add(filteredPropertiesPanel);
 

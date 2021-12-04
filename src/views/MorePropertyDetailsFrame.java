@@ -1,79 +1,105 @@
 package views;
 
+import models.Booking;
 import models.Property;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 
 public class MorePropertyDetailsFrame extends JFrame {
-    private PropertyBookmarkPanel backReferencePanel;
+    private JPanel backReferencePanel;
+    private Property property;
+    private Booking booking;
 
-    public MorePropertyDetailsFrame(JPanel backReferencePanel, Property property) {
+    public MorePropertyDetailsFrame(JPanel backReferencePanel) {
         super("More Details");
 
-        this.backReferencePanel = (PropertyBookmarkPanel) backReferencePanel;
+        this.backReferencePanel = backReferencePanel;
+
+        long numberOfNights;
+        BigDecimal totalServiceCharge;
+        BigDecimal totalCleaningCharge;
+        BigDecimal totalCost;
+
+        if (backReferencePanel instanceof SearchPropertyPanelBookmarkPanel) {
+            property = ((SearchPropertyPanelBookmarkPanel) backReferencePanel).getProperty();
+
+            numberOfNights = ((SearchPropertyPanelBookmarkPanel) backReferencePanel).getNumberOfNights();
+            totalServiceCharge = ((SearchPropertyPanelBookmarkPanel) backReferencePanel).calculateTotalServiceCharge();
+            totalCleaningCharge = ((SearchPropertyPanelBookmarkPanel) backReferencePanel).calculateTotalCleaningCharge();
+            totalCost = ((SearchPropertyPanelBookmarkPanel) backReferencePanel).calculateTotalCost();
+        } else {
+            booking = ((HomePanelBookmarkPanel) backReferencePanel).getBooking();
+            property = booking.getProperty();
+
+            numberOfNights = ((HomePanelBookmarkPanel) backReferencePanel).getNumberOfNights();
+            totalServiceCharge = ((HomePanelBookmarkPanel) backReferencePanel).calculateTotalServiceCharge();
+            totalCleaningCharge = ((HomePanelBookmarkPanel) backReferencePanel).calculateTotalCleaningCharge();
+            totalCost = ((HomePanelBookmarkPanel) backReferencePanel).calculateTotalCost();
+        }
 
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(840, 420);
 
-        JPanel hostDetailsPanel = new JPanel(new GridBagLayout());
-        Border hostDetailsPanelBorder = BorderFactory.createTitledBorder("Host Details");
-        hostDetailsPanel.setBorder(hostDetailsPanelBorder);
+        JPanel userDetailsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        if (MainFrame.loggedInUser.getRole().equals("guest")) {
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            hostDetailsPanel.add(new JLabel("Host name: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 0;
-            hostDetailsPanel.add(new JLabel(property.getHost().getForename()), gbc);
-            if (this.backReferencePanel.getBackReferencePanel() instanceof HomePanel && this.backReferencePanel.isBookingAccepted()) {
-                gbc.gridx = 0;
-                gbc.gridy = 1;
-                hostDetailsPanel.add(new JLabel("Email: "), gbc);
-                gbc.gridx = 1;
-                gbc.gridy = 1;
-                hostDetailsPanel.add(new JLabel(property.getHost().getEmail()), gbc);
-                gbc.gridx = 0;
-                gbc.gridy = 2;
-                hostDetailsPanel.add(new JLabel("Mobile: "),gbc);
-                gbc.gridx = 1;
-                gbc.gridy = 2;
-                hostDetailsPanel.add(new JLabel(property.getHost().getMobile()),gbc);
-            }
-            gbc.gridx = 0;
-            gbc.gridy = 3;
-            hostDetailsPanel.add(new JLabel("Is super host: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 3;
-            hostDetailsPanel.add(new JLabel(property.getHost().isSuperHost() ? "Yes" : "No"), gbc);
-        } else if (MainFrame.loggedInUser.getRole().equals("host")) {
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            hostDetailsPanel.add(new JLabel("Guest name: "), gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 0;
-            hostDetailsPanel.add(new JLabel(this.backReferencePanel.getGuest().getForename()), gbc);
-            if (this.backReferencePanel.getBackReferencePanel() instanceof HomePanel && this.backReferencePanel.isBookingAccepted()) {
-                gbc.gridx = 0;
-                gbc.gridy = 1;
-                hostDetailsPanel.add(new JLabel("Email: "), gbc);
-                gbc.gridx = 1;
-                gbc.gridy = 1;
-                hostDetailsPanel.add(new JLabel(this.backReferencePanel.getGuest().getEmail()), gbc);
-                gbc.gridx = 0;
-                gbc.gridy = 2;
-                hostDetailsPanel.add(new JLabel("Mobile: "),gbc);
-                gbc.gridx = 1;
-                gbc.gridy = 2;
-                hostDetailsPanel.add(new JLabel(this.backReferencePanel.getGuest().getMobile()),gbc);
-            }
+
+        String borderTitle;
+        String userForename;
+        String userEmail;
+        String userMobile;
+
+        if (MainFrame.loggedInUser.getRole().equals("host")) {
+            // host should see guest details
+            borderTitle = "Guest Details";
+            userForename = booking.getGuest().getForename();
+            userEmail = booking.getGuest().getEmail();
+            userMobile = booking.getGuest().getMobile();
+        } else {
+            // guest or not logged in users should see host details
+            borderTitle = "Host Details";
+            userForename = property.getHost().getForename();
+            userEmail = property.getHost().getEmail();
+            userMobile = property.getHost().getMobile();
         }
 
-        add(hostDetailsPanel);
+        userDetailsPanel.setBorder(BorderFactory.createTitledBorder(borderTitle));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        userDetailsPanel.add(new JLabel("Name: "), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        userDetailsPanel.add(new JLabel(userForename), gbc);
+        if (this.backReferencePanel instanceof HomePanelBookmarkPanel && booking.isAccepted()) {
+            // only display confidential information if a booking is accepted and displayed on home panel
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            userDetailsPanel.add(new JLabel("Email: "), gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 1;
+            userDetailsPanel.add(new JLabel(userEmail), gbc);
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            userDetailsPanel.add(new JLabel("Mobile: "),gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 2;
+            userDetailsPanel.add(new JLabel(userMobile),gbc);
+        }
+
+        if (!MainFrame.loggedInUser.getRole().equals("host")) {
+            gbc.gridx = 0;
+            gbc.gridy = 3;
+            userDetailsPanel.add(new JLabel("Is super host: "), gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 3;
+            userDetailsPanel.add(new JLabel(property.getHost().isSuperHost() ? "Yes" : "No"), gbc);
+        }
+
+        add(userDetailsPanel);
 
         JPanel propertyDetailsPanel = new JPanel(new GridBagLayout());
         Border propertyDetailsPanelBorder = BorderFactory.createTitledBorder("Property Details");
@@ -99,7 +125,7 @@ public class MorePropertyDetailsFrame extends JFrame {
         costDetailsPanel.add(new JLabel("Number of nights: "),gbc);
         gbc.gridx = 1;
         gbc.gridy = 0;
-        costDetailsPanel.add(new JLabel("£"+((PropertyBookmarkPanel) backReferencePanel).getNumberOfNights()),gbc);
+        costDetailsPanel.add(new JLabel(String.valueOf(numberOfNights)),gbc);
         gbc.gridx = 0;
         gbc.gridy = 1;
         costDetailsPanel.add(new JLabel("Price per night: "),gbc);
@@ -111,23 +137,22 @@ public class MorePropertyDetailsFrame extends JFrame {
         costDetailsPanel.add(new JLabel("Total service charge: "),gbc);
         gbc.gridx = 1;
         gbc.gridy = 2;
-        costDetailsPanel.add(new JLabel("£"+((PropertyBookmarkPanel) backReferencePanel).calculateTotalServiceCharge()),gbc);
+        costDetailsPanel.add(new JLabel("£"+totalServiceCharge),gbc);
         gbc.gridx = 0;
         gbc.gridy = 3;
         costDetailsPanel.add(new JLabel("Total cleaning charge: "),gbc);
         gbc.gridx = 1;
         gbc.gridy = 3;
-        costDetailsPanel.add(new JLabel("£"+((PropertyBookmarkPanel) backReferencePanel).calculateTotalCleaningCharge()),gbc);
+        costDetailsPanel.add(new JLabel("£"+totalCleaningCharge),gbc);
         gbc.gridx = 0;
         gbc.gridy = 4;
         costDetailsPanel.add(new JLabel("Total charge: "),gbc);
         gbc.gridx = 1;
         gbc.gridy = 4;
-        costDetailsPanel.add(new JLabel("£"+((PropertyBookmarkPanel) backReferencePanel).calculateTotalCost()),gbc);
+        costDetailsPanel.add(new JLabel("£"+totalCost),gbc);
         add(costDetailsPanel);
 
-        if (MainFrame.loggedInUser.getRole().equals("host") && this.backReferencePanel.getBackReferencePanel() instanceof HomePanel &&
-                this.backReferencePanel.isBookingAccepted()) {
+        if (backReferencePanel instanceof HomePanelBookmarkPanel && booking.isAccepted()) {
             JPanel addressDetailsPanel = new JPanel(new GridBagLayout());
             Border addressDetailsPanelBorder = BorderFactory.createTitledBorder("Address Details");
             addressDetailsPanel.setBorder(addressDetailsPanelBorder);

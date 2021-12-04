@@ -10,18 +10,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 import static database.OpenConnection.getConnection;
 
 public class HomePanel extends JPanel {
     private MainFrame mainFrame;
-
-    private ArrayList<Booking> bookingsList = new ArrayList<>();
-    private ArrayList<Property> bookedPropertiesList = new ArrayList<>();
-    public static User guest;
-    public static Booking booking;
-
 
     public HomePanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -45,18 +38,14 @@ public class HomePanel extends JPanel {
                 bookedPropertiesPanel.setLayout(new BoxLayout(bookedPropertiesPanel, BoxLayout.Y_AXIS));
 
                 while (rs.next()) {
-                    int guestID = rs.getInt("UserID");
-                    int propertyID = rs.getInt("PropertyID");
                     LocalDate startDate = rs.getDate("StartDate").toLocalDate();
                     LocalDate endDate = rs.getDate("EndDate").toLocalDate();
                     boolean isAccepted = rs.getBoolean("IsAccepted");
 
-                    booking = new Booking(guestID, propertyID, startDate, endDate, isAccepted);
-                    bookingsList.add(booking);
-
                     Property property = Property.selectProperty(rs);
-                    bookedPropertiesList.add(property);
-                    bookedPropertiesPanel.add(new PropertyBookmarkPanel(this, property));
+                    Booking booking = new Booking(MainFrame.loggedInUser, property, startDate, endDate, isAccepted);
+
+                    bookedPropertiesPanel.add(new HomePanelBookmarkPanel(this, booking));
                 }
 
                 add(bookedPropertiesPanel);
@@ -79,15 +68,9 @@ public class HomePanel extends JPanel {
 
                 while (rs.next()) {
                     int guestID = rs.getInt("b.UserID");
-                    int propertyID = rs.getInt("b.PropertyID");
                     LocalDate startDate = rs.getDate("StartDate").toLocalDate();
                     LocalDate endDate = rs.getDate("EndDate").toLocalDate();
                     boolean isAccepted = rs.getBoolean("IsAccepted");
-
-                    booking = new Booking(guestID, propertyID, startDate, endDate, isAccepted);
-                    bookingsList.add(booking);
-                    Property property = Property.selectProperty(rs);
-                    bookedPropertiesList.add(property);
 
                     query = "SELECT * FROM Users WHERE UserID = ?";
                     PreparedStatement pstGuest = con.prepareStatement(query);
@@ -101,8 +84,11 @@ public class HomePanel extends JPanel {
                     String mobile = rsGuest.getString("Mobile");
                     String role = rsGuest.getString("Role");
 
-                    guest = new User(guestID, forename, surname, email, mobile, role);
-                    bookedPropertiesPanel.add(new PropertyBookmarkPanel(this, property));
+                    User guest = new User(guestID, forename, surname, email, mobile, role);
+                    Property property = Property.selectProperty(rs);
+                    Booking booking = new Booking(guest, property, startDate, endDate, isAccepted);
+
+                    bookedPropertiesPanel.add(new HomePanelBookmarkPanel(this, booking));
                 }
 
                 add(bookedPropertiesPanel);
@@ -114,9 +100,5 @@ public class HomePanel extends JPanel {
 
     public MainFrame getMainFrame() {
         return mainFrame;
-    }
-
-    public ArrayList<Booking> getBookingsList() {
-        return bookingsList;
     }
 }

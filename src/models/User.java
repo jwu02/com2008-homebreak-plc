@@ -11,6 +11,12 @@ public class User {
     public User() {
         // keep empty constructor for initial startup of application
         // when no users are logged in
+        this.userID = 0;
+        this.forename = "";
+        this.surname = "";
+        this.email = "";
+        this.mobile = "";
+        this.role = "";
     }
 
     public User(int userID, String forename, String surname, String email, String mobile, String role) {
