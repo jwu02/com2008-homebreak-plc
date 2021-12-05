@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static database.OpenConnection.getConnection;
 
@@ -88,9 +90,8 @@ public class RegistrationPanel extends JPanel implements ActionListener {
         String dialogMessage;
 
         if (command.equals("Register")) {
-            if (forename.getText().equals("") || email.getText().equals("") || password.getText().equals("") ||
-                    mobile.getText().equals("") || !(hostRadioButton.isSelected() || guestRadioButton.isSelected())) {
-                dialogMessage = "Please fill in all fields and select a role.";
+            dialogMessage = validateRegistrationFields();
+            if (dialogMessage != null) {
                 JOptionPane.showMessageDialog(this, dialogMessage, "Registration", JOptionPane.WARNING_MESSAGE);
             } else {
                 try (Connection con = getConnection()) {
@@ -139,6 +140,31 @@ public class RegistrationPanel extends JPanel implements ActionListener {
                 }
             }
         }
+    }
+
+    public String validateRegistrationFields() {
+        if (forename.getText().equals("") || email.getText().equals("") || password.getText().equals("") ||
+                mobile.getText().equals("")) {
+            return "Please fill in all fields.";
+        } else {
+            if (!email.getText().equals("")) {
+                Pattern pattern = Pattern.compile(".+@.+\\..+", Pattern.CASE_INSENSITIVE);
+                Matcher emailMatcher = pattern.matcher(email.getText());
+                if (!emailMatcher.find()) {
+                    return "Please enter a valid email.";
+                }
+            }
+
+            if (password.getText().length() < 7) {
+                return "Please enter a password of length greater than 7.";
+            }
+        }
+
+        if (!(hostRadioButton.isSelected() || guestRadioButton.isSelected())) {
+            return "Please select a role.";
+        }
+
+        return null;
     }
 
     public void clearRegistrationFields() {
